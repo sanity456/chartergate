@@ -1,0 +1,57 @@
+{
+  "verified_at": "2026-09-20 21:07:48 UTC",
+  "app_source_commit": "089311df2187a6fc8bf6fa6fad40cf6a43e8dccf",
+  "website": "https://chartergate-studionet.vercel.app/",
+  "vercel": {
+    "account": "sanity456",
+    "scope": "sanity3",
+    "project": "chartergate-studionet",
+    "deployment_id": "dpl_CN8q6iR2TP7uebaSM2ShoRYcDnF3",
+    "deployment_url": "https://chartergate-studionet-ni42ybr3b-sanity3.vercel.app",
+    "state": "READY",
+    "artifact_directory": "out",
+    "audience": "public"
+  },
+  "chain_id": 61997,
+  "contract_address": "0x75bd5c02cc488eCee4DC5a2E865FD458204cB1f0",
+  "source_sha256": "4d78b8fb0b760409f4b17cef70c52de4e6064c8dc578265e6d3d12aa7b3d8388",
+  "checks": {
+    "direct_contract_tests": 75,
+    "v1_historical_tests": 35,
+    "v2_tests": 40,
+    "frontend_helper_tests": 36,
+    "genvm_lint": true,
+    "eslint": true,
+    "typescript": true,
+    "static_build": true,
+    "live_finalized_successful_transactions": 12,
+    "read_only_rejection_checks": 9,
+    "full_public_submission_audit": true
+  },
+  "github_ci": {
+    "url": "https://github.com/sanity456/chartergate/actions/runs/35537507565",
+    "conclusion": "success",
+    "application": "success",
+    "contract": "success"
+  },
+  "anonymous_http_exact_local_artifacts": {
+    "/": "434f04d099356c7c1b2554fd1d7b9d5fa412fcd4daa93a64bf31311005fe8b0c",
+    "/contract/chartergate_v2.py": "4d78b8fb0b760409f4b17cef70c52de4e6064c8dc578265e6d3d12aa7b3d8388",
+    "/contract/deployment-v2.json": "c165af9b5861ab71210dd6e7ea8d9a522358b1ab1d27dac9a5d6c43dce3d4d14",
+    "/contract/negative-checks-v2.json": "cb5b60e3923a92aeb977e08a0e3fe1479009fe6cf4a1f4229bc7f6a17e385cba"
+  },
+  "chrome_checks": [
+    "Published v2 contract/explorer/source/evidence links and live communities rendered.",
+    "Existing MetaMask session reconnected on Studio Next without signing.",
+    "Review community displayed six proposals; separate ambiguous community displayed one.",
+    "Expired unclosed ballot showed disabled vote buttons and enabled permissionless Finalize for a connected non-owner/non-voter; no transaction requested.",
+    "Local updated interface verified appeal-to-original and original-to-appeal navigation, blocked status, used-appeal explanation and fixed voting-window form default 1440 minutes."
+  ],
+  "limitations": [
+    "No new MetaMask-signed v2 transactions. Live v2 signing used disposable SDK test accounts.",
+    "Creator-selected immutable membership remains a trust boundary; identity and treasury features are not claimed.",
+    "AI screening does not verify real-world delivery or guarantee resistance to all attacks.",
+    "A transient Studio RPC limit of 30 requests/minute occurred during parallel checks; app recovered with Refresh and the final paced audit passed.",
+    "No user resubmission was performed; the owner must replace the old contract link and resubmit."
+  ]
+}

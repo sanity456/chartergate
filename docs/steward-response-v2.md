@@ -109,4 +109,10 @@ V2 SDK signing uses disposable funded test accounts, not the user's MetaMask key
 
 ## Short response for the portal
 
+### Publication verification
+
+Published to the existing Vercel URL with the v2 binding. Anonymous HTTP checks matched the exact built page, Python source and both evidence files. Chrome loaded the live v2 records and reconnected MetaMask; expired voting controls were disabled and non-owner finalization was available. No new MetaMask signature was requested. The complete paced public audit passed. [GitHub CI passed for the released application](https://github.com/sanity456/chartergate/actions/runs/35537507565). See [release verification](../deployments/v2-release-review.json) for exact scope and artifact hashes.
+
+### Copy this response
+
 Implemented all five requests in CharterGate v2 on Studio Next (61997). Validators now independently check every leader quote and reason as well as rule statuses. Blocked authors get one same-body appeal with immutable history. Proposal IDs include the author address. Voting has fixed deadlines, no early closure and permissionless finalization. Live hostile-prompt and ambiguous-rule cases passed with independent validator agreement. Twelve v2 transactions finalized successfully; 75 contract and 36 frontend/helper tests pass. The linked response supplies the new address, source hash, exact transaction evidence, reproduction steps and remaining trust boundaries. V1 evidence is retained as historical, not relabelled as v2.
