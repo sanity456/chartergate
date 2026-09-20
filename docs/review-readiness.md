@@ -1,5 +1,11 @@
 # CharterGate review checklist
 
+## Current reviewer status
+
+The Vercel app and GitHub repository are public. Browser-wallet evidence is published at `/contract/browser-wallet-test.json`. Earlier unavailable-link observations below are dated historical results, not current blockers. No demo video is required for this normal Builder submission, as confirmed by the submitter.
+
+On September 20, 2026, the submission audit reran GenVM lint, all 35 direct tests, all 29 frontend tests, ESLint, TypeScript and the static production build successfully. The live chain is 61997 and deployed source matches SHA-256 `73c9d30c5cd164e39c38d6235975bea7c1cecca0634e9ba2150183a9b2df9c73`. See `docs/submission-review.md` for the exact scope and remaining portal step. Repeat the non-signing live audit with `node --experimental-strip-types scripts/check-submission.mjs`.
+
 ## What is implemented
 
 - One native GenLayer contract owns communities, immutable charters, proposal screening, revisions, voter authorization, votes, quorum, and final ballot outcomes.
@@ -20,15 +26,15 @@
 - Read-only negative GenVM simulations: see `deployments/negative-checks.json`. These verify rejected votes and unchanged records, not broadcast negative transactions.
 - Browser: no-wallet dialog, invalid community input, live ineligible decision/evidence, draft staging, desktop/mobile layout checks, and WebMCP valid/invalid input checked.
 - Public Vercel hosting: https://chartergate-studionet.vercel.app/ is deployed in the owner's `sanity3` account space. Unauthenticated HTTP checks returned 200 for the app, contract source and both evidence files, with exact local artifact matches. The app loads in Chrome without a hosting sign-in. This hosting check does not establish successful wallet signing.
-- Real Chrome/MetaMask happy path: the submitter created an owned community, screened an eligible proposal, voted YES and closed its ballot. All four transactions finalized with successful execution. Finalized state and the browser show PASSED, YES 1 / NO 0; the vote and screening history were preserved. See `deployments/browser-wallet-test.json` for hashes, detailed validator outcomes, recovery observations and remaining browser flows. This local evidence file has not yet been published to Vercel.
+- Real Chrome/MetaMask happy path: the submitter created an owned community, screened an eligible proposal, voted YES and closed its ballot. All four transactions finalized with successful execution. Finalized state and the browser show PASSED, YES 1 / NO 0; the vote and screening history were preserved. See `deployments/browser-wallet-test.json` for hashes, detailed validator outcomes, recovery observations and scope. This evidence is now published on Vercel and GitHub.
 - Real Chrome/MetaMask ineligible path: the paid-workshop screening finalized successfully with rule statuses FAIL/PASS/PASS. The deterministic eligibility view returned `satisfied: false` and `INELIGIBLE`; the browser displayed blocked voting without vote/close buttons and offered a revision. A read-only GenVM vote simulation on that same proposal rejected with `VOTING_BLOCKED:INELIGIBLE` and preserved its full record. No failing vote transaction was broadcast. Evidence is in `deployments/browser-wallet-test.json`.
 - Real Chrome/MetaMask clarification path: the meetup screening finalized successfully with UNCLEAR/PASS/PASS because attendance cost was omitted. The eligibility view returned `satisfied: false` with `NEEDS_CLARIFICATION`. The browser offered revision but no vote/close controls. A read-only GenVM vote simulation rejected with `VOTING_BLOCKED:NEEDS_CLARIFICATION` and preserved the record. The complete original record's canonical JSON hash is saved before revision for an exact preservation check.
 - Real Chrome/MetaMask revision path: adding explicit free attendance produced a new linked record with PASS/PASS/PASS and `satisfied: true`. Its ballot opened at 0/0, voting was enabled for the authorized wallet, and closure stayed disabled before quorum. The original's complete canonical record hash was identical before/after revision, its eligibility stayed false, both records appeared in the list, and View preserved original opened the original blocked decision. Seven user-approved transactions finalized successfully across the planned desktop MetaMask test flows. No vote or closure was requested for the revision.
-- Final read-only release check at 2026-09-20T14:48:03.832Z: RPC is chain 61997; live contract source matches the pinned frontend/source hash exactly; app, source and the two existing public evidence files all return HTTP 200 anonymously and match local bytes. The new browser-wallet evidence URL still returns 404. `gh repo view sanity456/chartergate` could not resolve a repository, so reviewer source access has not been established.
+- Historical pre-publication check at 2026-09-20T14:48:03.832Z: RPC was chain 61997 and live source matched. Browser-wallet evidence returned 404 and no GitHub repository was available at that time. Both access issues were resolved in the follow-up release below; this historical snapshot is retained in `deployments/browser-wallet-test.json`.
 
 ## Remaining before submission
 
-1. Record/upload the demo if the actual Builder form requires it. A 90-second guide is in `docs/demo-script.md`; no CharterGate video has been recorded or uploaded. A 950-character description and exact evidence URLs are in `docs/submission.md`; the form itself has not been submitted.
+1. Check the actual portal fields against `docs/submission.md`, upload `public/chartergate-logo.png`, and submit after the user's final review. No video is required. Preparing the text is not the same as submitting the form.
 2. Recheck the live chain, source hash and links on submission day because Studio Next can reset. Scope wallet claims to what was tested: the planned desktop Chrome/MetaMask flows passed; OKX/Phantom extension signing and mobile signing have not been verified.
 
 ## Wallet UX follow-up release

@@ -32,9 +32,14 @@ Network: Studio Next / development preview, chain 61997. Do not label it stable 
 | GitHub File | https://github.com/sanity456/chartergate/blob/main/contracts/chartergate.py | Native contract implementation |
 | GitHub File | https://github.com/sanity456/chartergate/blob/main/deployments/browser-wallet-test.json | Seven real user-approved transactions, blocked-vote simulations and immutable revision history |
 | GitHub File | https://github.com/sanity456/chartergate/blob/main/docs/review-readiness.md | Test scope and limitations |
+| GitHub File | https://github.com/sanity456/chartergate/blob/main/docs/submission-review.md | Fresh chain, receipt, policy and public-link checks |
 | Other | https://chartergate-studionet.vercel.app/contract/browser-wallet-test.json | Same downloadable real-wallet evidence |
 
-If a video is requested, record the guide in `docs/demo-script.md`, upload it to your own channel, and supply the actual video URL. No CharterGate video has been recorded or uploaded by this task. Do not reuse the TranslateCheck video.
+No demo video is required for this normal Builder submission, as confirmed by the submitter. Leave any optional video field empty. Do not reuse the TranslateCheck video.
+
+## Logo
+
+Upload `public/chartergate-logo.png`: a 1024 × 1024 PNG export of the existing CharterGate logo in `public/favicon.svg`. The submitter uploads the logo and presses the final Submit button themselves.
 
 ## Reviewer reproduction
 

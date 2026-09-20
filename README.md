@@ -70,6 +70,7 @@ python -m pytest tests/direct -q
 npm run build
 npm run verify:chain
 node --experimental-strip-types scripts/negative-checks.mjs
+node --experimental-strip-types scripts/check-submission.mjs
 ```
 
 The direct-test compatibility shim only adapts the pinned SDK's JSON transport and Windows temporary-file cleanup. It does not replace the contract parser, validator, gate or storage logic.
@@ -93,4 +94,4 @@ Do not deploy the repository root as a static directory. The Vercel project uses
 
 ## Submission status
 
-See `docs/review-readiness.md` for verified checks and remaining work, `docs/submission.md` for the draft entry, and `docs/demo-script.md` for the recording guide. The scoped desktop Chrome/MetaMask walkthrough passed; the later wallet UX changes have additional regression tests. Other wallet extensions and mobile signing are not certified by those results. No approval or acceptance is guaranteed.
+See `docs/review-readiness.md` for verified checks and remaining work and `docs/submission.md` for the draft entry. The upload-ready logo is `public/chartergate-logo.png` (1024 × 1024). No demo video is required for this normal Builder submission. The scoped desktop Chrome/MetaMask walkthrough passed; the later wallet UX changes have additional regression tests. Other wallet extensions and mobile signing are not certified by those results. No approval or acceptance is guaranteed.

@@ -11,6 +11,7 @@
   "scope": "Planned desktop Chrome/MetaMask flows: submitter-owned community, eligible screening, YES vote, ballot closure, ineligible and clarification screening with blocked voting, and linked revision preserving the original. Does not certify all wallet providers, mobile signing, every edge case, production security or submission readiness.",
   "happy_path_complete": true,
   "last_verified_at": "2026-09-20T14:48:03.832Z",
+  "historical_context": "The observations and release_readback below describe the original signing run before the wallet UX/publication follow-up. The wallet connection and balance-preflight issues were subsequently fixed, and both the evidence URL and GitHub repository are now public. Original observations are retained rather than overwritten. See docs/wallet-ux-fixes.md and docs/submission-review.md for the later checks; these are not seven new signatures on the patched frontend.",
   "remaining_browser_flows": [],
   "observations": [
     "After initial connection/network switching, the app reported a wallet account or network change and cleared its connected account. Selecting MetaMask again restored the connection on Studio Next without another network change. Initial connection requires further UX review.",
