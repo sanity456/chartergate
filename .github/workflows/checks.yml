@@ -1,0 +1,31 @@
+name: Checks
+on: [push, pull_request]
+jobs:
+  application:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+  contract:
+    runs-on: ubuntu-latest
+    env:
+      GENVM_VERSION: v0.6.0-rc5
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: genvm-lint check contracts/chartergate.py --json
+      - run: python -m pytest tests/direct -q

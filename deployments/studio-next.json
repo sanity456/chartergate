@@ -1,0 +1,320 @@
+{
+  "chain_id": 61997,
+  "rpc": "https://studio-dev.genlayer.com/api",
+  "sdk_version": "2.0.0-rc.1",
+  "transactions": [
+    {
+      "action": "deploy",
+      "hash": "0x1d2eadd995dbbc172040b263c03dfe118f292545c0fcbcef9510383e210a059f",
+      "account": "0x8d53d533fE23a5d56C69b746Ffd92eCAa77211c5",
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "completed_at": "2026-09-20T12:33:52.194Z",
+      "validators": [
+        {
+          "mode": "leader",
+          "vote": null,
+          "execution_result": "SUCCESS"
+        },
+        {
+          "mode": "validator",
+          "vote": "agree",
+          "execution_result": "SUCCESS"
+        }
+      ]
+    },
+    {
+      "action": "create_community",
+      "hash": "0x7f6542dc5595dec1290844559052f032d59ba1d15d4b6e9cbf5455756b4a7574",
+      "account": "0x77Fe7E42d8725696aD0295a0591232bECe1b6317",
+      "method": "create_community",
+      "args": [
+        "CharterGate live test 2026-09-20T12:35:40.172Z",
+        "[\"Activities must be free for participants.\",\"Activities must teach open-source software development.\",\"Learning materials must be published openly.\"]",
+        "[\"0x77Fe7E42d8725696aD0295a0591232bECe1b6317\"]",
+        1
+      ],
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "completed_at": "2026-09-20T12:36:19.591Z",
+      "validators": [
+        {
+          "mode": "leader",
+          "vote": null,
+          "execution_result": "SUCCESS"
+        },
+        {
+          "mode": "validator",
+          "vote": "idle",
+          "execution_result": "ERROR"
+        }
+      ]
+    },
+    {
+      "action": "screen_eligible",
+      "hash": "0x89e15a198934ea934945c3c7c24390ae5fe99d8f7e6ac73e9615186f81fa836c",
+      "account": "0x77Fe7E42d8725696aD0295a0591232bECe1b6317",
+      "method": "submit_proposal",
+      "args": [
+        "94864c4088391a81f5751c2d37707042276feefadd6e946d5f31ed652347bf1f",
+        "Free open-source developer workshop",
+        "We will run a free workshop teaching open-source software development. There is no fee for participants. We will publish all learning materials openly in a public repository.",
+        ""
+      ],
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "completed_at": "2026-09-20T12:37:19.341Z",
+      "validators": [
+        {
+          "mode": "leader",
+          "vote": null,
+          "execution_result": "SUCCESS"
+        },
+        {
+          "mode": "validator",
+          "vote": "agree",
+          "execution_result": "SUCCESS"
+        }
+      ]
+    },
+    {
+      "action": "vote_yes",
+      "hash": "0x2b2f1650ccb1db5e5afc0adc3ac21f1a7ec524172be8fdaa59f821770ed9a99d",
+      "account": "0x77Fe7E42d8725696aD0295a0591232bECe1b6317",
+      "method": "vote",
+      "args": [
+        "af850a08e6de18961b043d0f03c1a774dcedad2de0b571457a384fb0eceb0f18",
+        "YES"
+      ],
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "completed_at": "2026-09-20T12:38:01.702Z",
+      "validators": [
+        {
+          "mode": "leader",
+          "vote": null,
+          "execution_result": "SUCCESS"
+        },
+        {
+          "mode": "validator",
+          "vote": "agree",
+          "execution_result": "SUCCESS"
+        }
+      ]
+    },
+    {
+      "action": "close_ballot",
+      "hash": "0xfdf4e9cca6df888e12a5bb4efe6fc796917e85976624c8211a60c4e73c278c31",
+      "account": "0x77Fe7E42d8725696aD0295a0591232bECe1b6317",
+      "method": "close_ballot",
+      "args": [
+        "af850a08e6de18961b043d0f03c1a774dcedad2de0b571457a384fb0eceb0f18"
+      ],
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "completed_at": "2026-09-20T12:38:47.721Z",
+      "validators": [
+        {
+          "mode": "leader",
+          "vote": null,
+          "execution_result": "SUCCESS"
+        },
+        {
+          "mode": "validator",
+          "vote": "agree",
+          "execution_result": "SUCCESS"
+        }
+      ]
+    },
+    {
+      "action": "screen_ineligible",
+      "hash": "0xc63e9e8006928f9543c0acf80760c88bef1ae8086c592caac299bf1f07e76fa0",
+      "account": "0x77Fe7E42d8725696aD0295a0591232bECe1b6317",
+      "method": "submit_proposal",
+      "args": [
+        "94864c4088391a81f5751c2d37707042276feefadd6e946d5f31ed652347bf1f",
+        "Paid open-source developer workshop",
+        "We will teach open-source software development at a workshop. Every participant must pay a $20 attendance fee. All learning materials will be published openly.",
+        ""
+      ],
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "completed_at": "2026-09-20T12:39:40.911Z",
+      "validators": [
+        {
+          "mode": "leader",
+          "vote": null,
+          "execution_result": "SUCCESS"
+        },
+        {
+          "mode": "validator",
+          "vote": "idle",
+          "execution_result": "ERROR"
+        }
+      ]
+    },
+    {
+      "action": "screen_clarification",
+      "hash": "0x004969b0bd0082714151e1ce3950cd36efb4ad0df59844e59c2569e2ea1c8beb",
+      "account": "0x77Fe7E42d8725696aD0295a0591232bECe1b6317",
+      "method": "submit_proposal",
+      "args": [
+        "94864c4088391a81f5751c2d37707042276feefadd6e946d5f31ed652347bf1f",
+        "Open-source developer meetup",
+        "We will teach open-source software development at a meetup. Learning materials will be published openly.",
+        ""
+      ],
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "completed_at": "2026-09-20T12:40:31.894Z",
+      "validators": [
+        {
+          "mode": "leader",
+          "vote": null,
+          "execution_result": "SUCCESS"
+        },
+        {
+          "mode": "validator",
+          "vote": "agree",
+          "execution_result": "SUCCESS"
+        }
+      ]
+    }
+  ],
+  "created_at": "2026-09-20T12:33:03.936Z",
+  "source_sha256": "73c9d30c5cd164e39c38d6235975bea7c1cecca0634e9ba2150183a9b2df9c73",
+  "address": "0x132EfCaf14b265a7E936174DCb04b947eCA892e4",
+  "deployment_tx": "0x1d2eadd995dbbc172040b263c03dfe118f292545c0fcbcef9510383e210a059f",
+  "source_exact": true,
+  "config": {
+    "closure": "OWNER_AFTER_QUORUM",
+    "community_count": 1,
+    "max_rules": 6,
+    "max_voters": 32,
+    "policy": "chartergate/rules-v1",
+    "treasury_access": false
+  },
+  "test_community_id": "94864c4088391a81f5751c2d37707042276feefadd6e946d5f31ed652347bf1f",
+  "eligible": {
+    "proposal_id": "af850a08e6de18961b043d0f03c1a774dcedad2de0b571457a384fb0eceb0f18",
+    "review": {
+      "checks": [
+        {
+          "quote": "There is no fee for participants.",
+          "reason": "The proposal explicitly states that participants will not be charged, satisfying the free‑activity requirement.",
+          "rule": "Activities must be free for participants.",
+          "rule_index": 0,
+          "status": "PASS"
+        },
+        {
+          "quote": "We will run a free workshop teaching open-source software development.",
+          "reason": "The proposal clearly commits to teaching open‑source software development in the workshop.",
+          "rule": "Activities must teach open-source software development.",
+          "rule_index": 1,
+          "status": "PASS"
+        },
+        {
+          "quote": "We will publish all learning materials openly in a public repository.",
+          "reason": "The proposal affirms that all learning materials will be published openly, meeting the open‑publication rule.",
+          "rule": "Learning materials must be published openly.",
+          "rule_index": 2,
+          "status": "PASS"
+        }
+      ],
+      "verdict": "ELIGIBLE"
+    },
+    "gate": {
+      "failure_reasons": [],
+      "policy": "chartergate/rules-v1",
+      "satisfied": true
+    },
+    "ballot": {
+      "closed": true,
+      "closed_at": "2026-09-20T12:38:05.521882Z",
+      "no": 0,
+      "outcome": "PASSED",
+      "yes": 1
+    }
+  },
+  "ineligible": {
+    "proposal_id": "566abba7d5a239c2ec32c6b795dd080fdd1b8642ce25b77f53123ad0dfe6222a",
+    "review": {
+      "checks": [
+        {
+          "quote": "Every participant must pay a $20 attendance fee",
+          "reason": "The proposal requires a payment, directly violating the rule that activities must be free for participants.",
+          "rule": "Activities must be free for participants.",
+          "rule_index": 0,
+          "status": "FAIL"
+        },
+        {
+          "quote": "We will teach open-source software development at a workshop",
+          "reason": "The proposal explicitly states it will teach open-source software development, satisfying the rule.",
+          "rule": "Activities must teach open-source software development.",
+          "rule_index": 1,
+          "status": "PASS"
+        },
+        {
+          "quote": "All learning materials will be published openly",
+          "reason": "The proposal commits to publishing all learning materials openly, meeting the rule's requirement.",
+          "rule": "Learning materials must be published openly.",
+          "rule_index": 2,
+          "status": "PASS"
+        }
+      ],
+      "verdict": "INELIGIBLE"
+    },
+    "gate": {
+      "failure_reasons": [
+        "INELIGIBLE"
+      ],
+      "policy": "chartergate/rules-v1",
+      "satisfied": false
+    }
+  },
+  "clarification": {
+    "proposal_id": "ffeab97d538753dcde4293586e98d28c3ae6dc65ffde1beae97332610aaff40d",
+    "review": {
+      "checks": [
+        {
+          "quote": "",
+          "reason": "The proposal does not state whether the activity will be free; absence of cost information makes compliance indeterminate.",
+          "rule": "Activities must be free for participants.",
+          "rule_index": 0,
+          "status": "UNCLEAR"
+        },
+        {
+          "quote": "We will teach open-source software development at a meetup.",
+          "reason": "The proposal explicitly commits to teaching open-source software development, satisfying the rule.",
+          "rule": "Activities must teach open-source software development.",
+          "rule_index": 1,
+          "status": "PASS"
+        },
+        {
+          "quote": "Learning materials will be published openly.",
+          "reason": "The proposal directly states that learning materials will be published openly, meeting the requirement.",
+          "rule": "Learning materials must be published openly.",
+          "rule_index": 2,
+          "status": "PASS"
+        }
+      ],
+      "verdict": "NEEDS_CLARIFICATION"
+    },
+    "gate": {
+      "failure_reasons": [
+        "NEEDS_CLARIFICATION"
+      ],
+      "policy": "chartergate/rules-v1",
+      "satisfied": false
+    }
+  },
+  "live_workflow_passed": true,
+  "completed_at": "2026-09-20T12:40:34.037Z"
+}

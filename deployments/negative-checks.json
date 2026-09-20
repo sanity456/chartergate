@@ -1,0 +1,28 @@
+{
+  "chain_id": 61997,
+  "address": "0x132EfCaf14b265a7E936174DCb04b947eCA892e4",
+  "checked_at": "2026-09-20T12:45:57.415Z",
+  "checks": [
+    {
+      "case": "ineligible",
+      "expected": "VOTING_BLOCKED:INELIGIBLE",
+      "contract_rejected": true,
+      "state_unchanged": true,
+      "proposal_id": "566abba7d5a239c2ec32c6b795dd080fdd1b8642ce25b77f53123ad0dfe6222a"
+    },
+    {
+      "case": "clarification",
+      "expected": "VOTING_BLOCKED:NEEDS_CLARIFICATION",
+      "contract_rejected": true,
+      "state_unchanged": true,
+      "proposal_id": "ffeab97d538753dcde4293586e98d28c3ae6dc65ffde1beae97332610aaff40d"
+    },
+    {
+      "case": "eligible",
+      "expected": "BALLOT_CLOSED",
+      "contract_rejected": true,
+      "state_unchanged": true,
+      "proposal_id": "af850a08e6de18961b043d0f03c1a774dcedad2de0b571457a384fb0eceb0f18"
+    }
+  ]
+}
