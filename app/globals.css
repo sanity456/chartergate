@@ -231,6 +231,25 @@ main {
   border-radius: 7px;
   margin-bottom: 24px;
 }
+details.notice summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+details.notice p {
+  margin-top: 10px;
+  line-height: 1.6;
+}
+details.notice a {
+  display: inline-block;
+  margin-top: 10px;
+  text-decoration: underline;
+  font-weight: 600;
+}
+.error-box a {
+  display: block;
+  margin-top: 10px;
+  text-decoration: underline;
+}
 .community-bar {
   display: flex;
   align-items: center;

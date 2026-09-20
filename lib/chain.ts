@@ -7,7 +7,8 @@ import { formatUnits } from "viem";
 import { ACTIVE_CHAIN, NETWORK } from "./network.ts";
 import { DEPLOYMENT } from "./deployment.ts";
 import { plain, executionSucceeded, receiptStatus } from "./protocol.ts";
-import { ensureStudioNet, type Provider } from "./wallet.ts";
+import { assertWalletContext, type Provider } from "./wallet.ts";
+import { preflightSubmission } from "./submission-preflight.ts";
 export const reader = createClient({ chain: ACTIVE_CHAIN });
 export const address = DEPLOYMENT.address as `0x${string}`;
 export const configured =
@@ -35,11 +36,12 @@ export async function submit(
   functionName: string,
   args: (string | number)[],
   onQuote: (s: string) => void,
+  signal?: AbortSignal,
 ) {
   if (!configured) throw Error("Live contract is not configured.");
   if (Number(await reader.request({ method: "eth_chainId" })) !== NETWORK.id)
     throw Error("RPC chain mismatch. Nothing was submitted.");
-  await ensureStudioNet(provider);
+  await assertWalletContext(provider, account);
   const client = createClient({
     chain: ACTIVE_CHAIN,
     account,
@@ -54,13 +56,18 @@ export async function submit(
   const quote = await client.estimateTransactionFeesForWrite(request);
   if (quote.feeValue > 1000000000000000000n)
     throw Error("Quote exceeds 1 test GEN. Nothing was submitted.");
-  await ensureStudioNet(provider);
-  const accounts = await provider.request({ method: "eth_accounts" });
-  if (
-    !Array.isArray(accounts) ||
-    String(accounts[0]).toLowerCase() !== account.toLowerCase()
-  )
-    throw Error("Your account changed. Reconnect before submitting.");
+  onQuote("Checking your available test GEN on Studio Next (61997)…");
+  await preflightSubmission({
+    provider,
+    account,
+    feeValue: quote.feeValue,
+    signal,
+    readPendingBalance: () =>
+      reader.request({
+        method: "eth_getBalance",
+        params: [account, "pending"],
+      }),
+  });
   onQuote(
     `Review in your wallet: ${functionName.replaceAll("_", " ")} on Studio Next (61997). Protocol fee deposit ${formatUnits(quote.feeValue, 18)} test GEN. No treasury transfer.`,
   );

@@ -1,0 +1,41 @@
+{
+  "verified_on": "2026-09-20",
+  "account_username": "sanity456",
+  "scope": "sanity3",
+  "project_name": "chartergate-studionet",
+  "project_id": "prj_KjRoyML4ooZGVz2KDkrGVF59jtCu",
+  "deployment_id": "dpl_4pNniBpurfQM3Jfpbph18jqPFZgj",
+  "production_url": "https://chartergate-studionet.vercel.app/",
+  "deployment_url": "https://chartergate-studionet-2b6ym4amq-sanity3.vercel.app",
+  "state": "READY",
+  "audience": "public",
+  "artifact_directory": "out",
+  "app_source_commit": "49bd9ee4dfe385aa2ac38c105593d5c3d22df09d",
+  "chain_id": 61997,
+  "contract_address": "0x132EfCaf14b265a7E936174DCb04b947eCA892e4",
+  "contract_source_sha256": "73c9d30c5cd164e39c38d6235975bea7c1cecca0634e9ba2150183a9b2df9c73",
+  "unauthenticated_checks": {
+    "/": { "status": 200, "exact_artifact_match": true },
+    "/contract/chartergate.py": { "status": 200, "exact_artifact_match": true },
+    "/contract/deployment.json": { "status": 200, "exact_artifact_match": true },
+    "/contract/negative-checks.json": { "status": 200, "exact_artifact_match": true }
+  },
+  "notes": "Initial hosting migration record: no contract/client behavior changed at that time and no GitHub repository existed yet. Original Sites deployment remains owner-private. Later releases are listed separately below.",
+  "follow_up_releases": [
+    {
+      "verified_at": "2026-09-20T15:06:27.298Z",
+      "deployment_id": "dpl_ECTAhE8pMzQMgmKvDBPM6qGxaLSd",
+      "deployment_url": "https://chartergate-studionet-qdfshp2o2-sanity3.vercel.app",
+      "production_url": "https://chartergate-studionet.vercel.app/",
+      "state": "READY",
+      "audience": "public",
+      "changes": "Wallet identity-event handling, pre-signature protocol-deposit balance checks, recovery/faucet help, and public browser-wallet evidence. No contract change or new deployment.",
+      "production_index_sha256": "1c60710d64a2637a8cf0941c8fa2c591b470c16d47a4a9af7275f12181a7ca35",
+      "wallet_evidence_sha256": "b21a58259434f32a6ddb25cb150cd9d592b2f2ae8544748d2e55a4f59bbb3272",
+      "anonymous_http_200_exact_local_bytes": ["/", "/contract/browser-wallet-test.json", "/contract/chartergate.py", "/contract/deployment.json"],
+      "local_validation": {"frontend_tests_passed": 29, "direct_contract_tests_passed": 35, "genvm_lint_passed": true, "eslint_passed": true, "typescript_passed": true, "production_build_passed": true},
+      "chrome_metamask_connection_check": "Published app connected the existing 0x7cef...97d0 account on Studio Next and remained connected on follow-up inspection. No new transaction was signed. Actual wrong-network/restart permutations were not all repeated; event and balance edge cases use simulated-provider tests.",
+      "github_repository": "https://github.com/sanity456/chartergate"
+    }
+  ]
+}

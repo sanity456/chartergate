@@ -53,10 +53,12 @@ import { NETWORK, pendingStorageKey } from "@/lib/network";
 import { DEPLOYMENT } from "@/lib/deployment";
 import {
   watchWallets,
-  connectWallet,
-  ensureStudioNet,
+  connectStudioWallet,
+  assertWalletContext,
+  watchWalletContext,
   type WalletOption,
 } from "@/lib/wallet";
+import { InsufficientTestBalanceError } from "@/lib/submission-preflight";
 import {
   LABELS,
   EXAMPLES,
@@ -97,6 +99,7 @@ export default function Workspace() {
   const [tab, setTab] = useState("proposals"),
     [loading, setLoading] = useState(configured),
     [error, setError] = useState(""),
+    [fundingHelp, setFundingHelp] = useState(false),
     [notice, setNotice] = useState("");
   const [wallets, setWallets] = useState<WalletOption[]>([]),
     [walletOpen, setWalletOpen] = useState(false),
@@ -118,6 +121,7 @@ export default function Workspace() {
     [txStatus, setTxStatus] = useState("");
   const lock = useRef(false),
     abort = useRef<AbortController | null>(null),
+    walletSession = useRef<AbortController | null>(null),
     walletRefresh = useRef<() => void>(() => {}),
     selectionEpoch = useRef(0);
   const community = communities.items.find((c) => c.id === selectedId);
@@ -166,22 +170,23 @@ export default function Workspace() {
   }, []);
   useEffect(() => {
     const p = selectedWallet?.provider;
-    if (!p) return;
-    const changed = () => {
+    if (!p || !account) return;
+    let active = true;
+    const changed = (reason: string) => {
+      if (!active) return;
+      walletSession.current?.abort();
       setAccount(null);
-      setNotice(
-        "Wallet account or network changed. Reconnect the wallet you want to use.",
-      );
+      setAction(null);
+      setNotice(reason);
     };
-    p.on?.("accountsChanged", changed);
-    p.on?.("chainChanged", changed);
-    p.on?.("disconnect", changed);
+    const stop = watchWalletContext(p, account, changed);
+    // Catch a genuine change between connection validation and subscription.
+    void assertWalletContext(p, account).catch((e) => changed(safeError(e)));
     return () => {
-      p.removeListener?.("accountsChanged", changed);
-      p.removeListener?.("chainChanged", changed);
-      p.removeListener?.("disconnect", changed);
+      active = false;
+      stop();
     };
-  }, [selectedWallet]);
+  }, [selectedWallet, account]);
   useEffect(() => {
     if (!configured) return;
     // Hydrate an external transaction checkpoint after SSR. One bounded update, not derived render state.
@@ -227,9 +232,12 @@ export default function Workspace() {
     lock.current = true;
     setBusy(true);
     setError("");
+    setFundingHelp(false);
+    walletSession.current?.abort();
+    setAccount(null);
     try {
-      const a = await connectWallet(w.provider);
-      await ensureStudioNet(w.provider);
+      const a = await connectStudioWallet(w.provider);
+      walletSession.current = new AbortController();
       setSelectedWallet(w);
       setAccount(a);
       setWalletOpen(false);
@@ -287,6 +295,7 @@ export default function Workspace() {
     lock.current = true;
     setBusy(true);
     setError("");
+    setFundingHelp(false);
     try {
       const hash = await submit(
         account,
@@ -294,6 +303,7 @@ export default function Workspace() {
         a.method,
         a.args,
         setNotice,
+        walletSession.current?.signal,
       );
       const p = {
         hash: hash as `0x${string}`,
@@ -305,6 +315,8 @@ export default function Workspace() {
       setTxStatus("SUBMITTED");
       await track(p);
     } catch (e) {
+      setNotice("");
+      setFundingHelp(e instanceof InsufficientTestBalanceError);
       setError(safeError(e));
     } finally {
       lock.current = false;
@@ -573,8 +585,13 @@ export default function Workspace() {
                 className="text-button"
                 disabled={busy}
                 onClick={() => {
+                  walletSession.current?.abort();
                   setAccount(null);
                   setSelectedWallet(null);
+                  setAction(null);
+                  setNotice(
+                    "Wallet disconnected from this app. Submitted transaction records are preserved.",
+                  );
                 }}
               >
                 Disconnect
@@ -603,6 +620,27 @@ export default function Workspace() {
             Studio Next development preview. Public on-chain data; the network
             may reset. No real funds, secret information, or binding governance.
           </div>
+          <details className="notice">
+            <summary>Need test GEN or help connecting?</summary>
+            <p>
+              Use Studio Next (61997). A balance on stable Studio (61999) is
+              separate and cannot pay this app’s protocol fee.
+            </p>
+            <p>
+              Open Studio Next, connect the same wallet, select its address in
+              the account menu, then use the faucet’s droplet button. Leave the
+              default 10 GEN amount unchanged and select Fund. These are free
+              test tokens; do not buy or bridge real funds.
+            </p>
+            <a href={NETWORK.studio} target="_blank" rel="noreferrer">
+              Open free Studio Next faucet ↗
+            </a>
+            <p>
+              If your wallet stopped responding after sleep or a restart, unlock
+              it and reconnect. Reload if needed, then use Resume tracking for
+              any existing transaction instead of resubmitting.
+            </p>
+          </details>
           {!configured && (
             <div className="notice">
               Deployment verification in progress. Forms are available; live
@@ -611,7 +649,16 @@ export default function Workspace() {
           )}
           {error && (
             <div className="error-box" role="alert">
-              {error}
+              <div>
+                {error}
+                {fundingHelp && (
+                  <p>
+                    <a href={NETWORK.studio} target="_blank" rel="noreferrer">
+                      Open free Studio Next faucet ↗
+                    </a>
+                  </p>
+                )}
+              </div>
               <button className="text-button" onClick={() => setError("")}>
                 Dismiss
               </button>
@@ -1210,6 +1257,14 @@ export default function Workspace() {
                   rel="noreferrer"
                 >
                   Contract source
+                </a>
+                {" · "}
+                <a
+                  href="/contract/browser-wallet-test.json"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Wallet test evidence
                 </a>
               </p>
             )}

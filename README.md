@@ -15,6 +15,7 @@ Open the local address printed by the server. The app uses the complete `studioD
 
 ## Live deployment
 
+- [Public app on Vercel](https://chartergate-studionet.vercel.app/), hosted in the owner's `sanity3` account space.
 - Network: Studio Next / development preview, chain **61997**.
 - RPC: https://studio-dev.genlayer.com/api
 - [Contract explorer](https://explorer-studio-dev.genlayer.com/address/0x132EfCaf14b265a7E936174DCb04b947eCA892e4)
@@ -22,12 +23,14 @@ Open the local address printed by the server. The app uses the complete `studioD
 - Source SHA-256: `73c9d30c5cd164e39c38d6235975bea7c1cecca0634e9ba2150183a9b2df9c73`.
 - Contract source: `contracts/chartergate.py`.
 - Exact deployment and execution evidence: `deployments/studio-next.json`.
+- [Real Chrome/MetaMask workflow evidence](https://chartergate-studionet.vercel.app/contract/browser-wallet-test.json): seven finalized, successful user-approved transactions, plus read-only rejected-vote checks and original-record preservation.
 
 This is a development network and can reset. Reverify immediately before demonstrating or submitting. [Official network documentation](https://docs.genlayer.com/developers/intelligent-contracts/tools/genlayer-studio).
 
 ## Try the workflow
 
 1. Connect an Ethereum-compatible browser wallet supporting custom networks and switch to Studio Next. Approve requests yourself.
+   If you need test GEN, open [Studio Next](https://studio-dev.genlayer.com/), connect the same wallet, select its address in the account menu and use the droplet faucet. Leave the default 10 GEN amount unchanged, then select Fund. These are free test tokens. Balances on stable Studio (61999) are separate; do not purchase or bridge real funds for this prototype.
 2. Create a community with 1–6 clear rules and 1–32 voter wallets. For a personal test, add your connected address and use quorum 1. Charter, membership and quorum are fixed after creation.
 3. Draft a proposal addressing all rules. The included free workshop, paid workshop and missing-details examples demonstrate the three outcomes against the default charter.
 4. Submit screening. Review the fee in the wallet, wait for finalization and successful execution, then inspect each rule's status, quotation and reason.
@@ -35,6 +38,14 @@ This is a development network and can reset. Reverify immediately before demonst
 6. For INELIGIBLE or NEEDS_CLARIFICATION, the author can revise the body. The new review links to the preserved original. Eligible proposals cannot be revised in place.
 
 The seeded live-test community uses a disposable owner wallet. Create your own community to test your own voting and closure. No treasury funds move.
+
+The submitter-owned **CharterGate Wallet Test** community is also available to inspect. Its recorded eligible, ineligible, clarification and revision cases are in the browser-wallet evidence. Visitors can read them but cannot vote unless they are on that community's fixed voter list.
+
+## Wallet recovery and fee safety
+
+Connection checks the selected account again after switching networks. Duplicate events for that same account and Studio Next do not clear the connection. Real account, network and disconnect events invalidate the session and stop requests still being prepared. Unlock/reconnect after sleep; reload if the extension transport remains unavailable. Submitted transaction checkpoints remain resumable—never resubmit a pending hash.
+
+Before requesting a signature, the app reads the connected address's pending balance from the configured Studio Next RPC and compares it to the protocol fee deposit using exact integer arithmetic. Insufficient or unverifiable funds stop the request. Account and chain are rechecked after the balance read. This is a protocol-deposit precheck, not a guarantee against later balance changes or any additional wallet/network charges.
 
 ## Why GenLayer is essential
 
@@ -69,8 +80,17 @@ The first line of the contract is the version marker required by this live GenVM
 
 ## Hosting
 
-The app is a static Next.js export. All authoritative records reside on GenLayer; no application database, LLM API key or backend signer is used. The build verifies frontend/deployment/source bindings and exports the exact Python source and deployment evidence. Sites hosts the `out` artifact privately by default. Native Next.js is used for the portable runtime because the bundled Workers runtime failed on this Windows host.
+The app is a static Next.js export. All authoritative records reside on GenLayer; no application database, LLM API key or backend signer is used. The build verifies frontend/deployment/source bindings and exports the exact Python source and deployment evidence. The public production app is hosted on Vercel at https://chartergate-studionet.vercel.app/. The earlier Sites deployment remains private and is not the public testing URL. Native Next.js is used for the portable runtime because the bundled Workers runtime failed on this Windows host.
+
+To update the same Vercel project after a successful build, upload only the generated static artifact:
+
+```sh
+npm run build
+vercel deploy out --project chartergate-studionet --scope sanity3 --prod --yes
+```
+
+Do not deploy the repository root as a static directory. The Vercel project uses the Other/static preset; the command above uploads `out`, not source files, local configuration, or credentials. See `deployments/vercel.json` for the initial production deployment record.
 
 ## Submission status
 
-See `docs/review-readiness.md` for verified checks and remaining work. Local tests and a live SDK workflow are not equivalent to a real extension-signing test. Public source access, an owner-wallet browser walkthrough and submission evidence still need to be prepared before review. No approval or acceptance is guaranteed.
+See `docs/review-readiness.md` for verified checks and remaining work, `docs/submission.md` for the draft entry, and `docs/demo-script.md` for the recording guide. The scoped desktop Chrome/MetaMask walkthrough passed; the later wallet UX changes have additional regression tests. Other wallet extensions and mobile signing are not certified by those results. No approval or acceptance is guaranteed.

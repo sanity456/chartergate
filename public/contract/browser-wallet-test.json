@@ -1,0 +1,233 @@
+{
+  "test_started_on": "2026-09-20",
+  "website": "https://chartergate-studionet.vercel.app/",
+  "browser": "Chrome",
+  "wallet": "MetaMask",
+  "chain_id": 61997,
+  "contract_address": "0x132EfCaf14b265a7E936174DCb04b947eCA892e4",
+  "signing_account": "0x7cef5dbbd598ba74ef9c665c9853e573448d97d0",
+  "approval_method": "User approved each requested transaction in their browser wallet; no private key was accessed.",
+  "complete": true,
+  "scope": "Planned desktop Chrome/MetaMask flows: submitter-owned community, eligible screening, YES vote, ballot closure, ineligible and clarification screening with blocked voting, and linked revision preserving the original. Does not certify all wallet providers, mobile signing, every edge case, production security or submission readiness.",
+  "happy_path_complete": true,
+  "last_verified_at": "2026-09-20T14:48:03.832Z",
+  "remaining_browser_flows": [],
+  "observations": [
+    "After initial connection/network switching, the app reported a wallet account or network change and cleared its connected account. Selecting MetaMask again restored the connection on Studio Next without another network change. Initial connection requires further UX review.",
+    "Community creation finalized with successful execution and the matching community was read back from finalized contract state. The receipt included a validator entry with vote idle and execution_result ERROR; this record does not claim every validator reported success.",
+    "A laptop shutdown interrupted the first unsigned YES vote request. After restart, finalized state showed no vote and the page had no submitted pending hash. Chrome reported MetaMask transport/liveness warnings and reconnection did not persist. Reloading the app and reconnecting restored the same account; a new YES vote request was then approved by the user. No community or proposal was recreated.",
+    "Initial close-ballot requests were declined because the signing wallet had insufficient Studio Next (61997) test GEN. The user's 0.05 GEN balance was on stable Studio (61999), not the active chain. The official Studio Next faucet added 10 free test GEN to the same MetaMask address; the verified active-chain balance became 10.00030179030000706 GEN before closing. No real funds were purchased or bridged. The app quotes protocol fees but does not yet precheck the active-chain balance.",
+    "The user approved the funded close-ballot request. Its receipt finalized with successful execution and three agreeing successful validator receipts. Two idle/ERROR entries explicitly reported CONSENSUS_VALIDATOR_QUORUM_REACHED (execution cancelled after quorum), not a failed close-ballot execution. Finalized readback and the browser both showed PASSED with YES 1 / NO 0. The recorded vote, proposal body and screening evidence were preserved."
+  ],
+  "community": {
+    "id": "ec9aa4523cceca5f7b3eb1bc85d34a86c6b4d4fe33e9b6e8d36fae0509d468df",
+    "name": "CharterGate Wallet Test",
+    "owner": "0x7cef5dbbd598ba74ef9c665c9853e573448d97d0",
+    "voters": ["0x7cef5dbbd598ba74ef9c665c9853e573448d97d0"],
+    "quorum": 1,
+    "rules": [
+      "Activities must be free for participants.",
+      "Activities must teach open-source software development.",
+      "Learning materials must be published openly."
+    ],
+    "created_at": "2026-09-20T13:13:01.064759Z"
+  },
+  "eligible_proposal": {
+    "id": "a5402e071d78251fc112b42cdba030918afe2e5a6f0b2fb7f3bc4bf33a89cc43",
+    "title": "Free open-source developer workshop",
+    "body": "We will run a free workshop teaching open-source software development. There is no fee for participants. We will publish all learning materials openly in a public repository.",
+    "created_at": "2026-09-20T13:16:08.782595Z",
+    "verdict": "ELIGIBLE",
+    "rule_statuses": ["PASS", "PASS", "PASS"],
+    "evidence_quotes": [
+      "There is no fee for participants.",
+      "teaching open-source software development",
+      "We will publish all learning materials openly in a public repository."
+    ],
+    "policy_result": {
+      "failure_reasons": [],
+      "policy": "chartergate/rules-v1",
+      "satisfied": true
+    },
+    "ballot_after_screening": {"closed": false, "no": 0, "outcome": "OPEN", "yes": 0},
+    "ballot_after_vote": {"closed": false, "no": 0, "outcome": "OPEN", "yes": 1},
+    "recorded_vote": {"choice": "YES", "found": true},
+    "browser_after_vote": {"vote_yes_enabled": false, "vote_no_enabled": false, "close_ballot_enabled": true},
+    "ballot_after_close": {"closed": true, "closed_at": "2026-09-20T14:31:17.829305Z", "no": 0, "outcome": "PASSED", "yes": 1},
+    "browser_after_close": {"status": "Close ballot confirmed on Studio Next.", "heading": "Closed ballot", "outcome": "PASSED", "yes": 1, "no": 0, "vote_buttons_present": false, "close_ballot_button_present": false, "pending_transaction_present": false},
+    "history_preserved_after_close": true
+  },
+  "ineligible_proposal": {
+    "id": "c02e37f30bfdd2bb1f328ab1735eb6d1f46342be002a57c1b119812965a828ef",
+    "title": "Paid open-source developer workshop",
+    "body": "We will teach open-source software development at a workshop. Every participant must pay a $20 attendance fee. All learning materials will be published openly.",
+    "created_at": "2026-09-20T14:37:21.760948Z",
+    "verdict": "INELIGIBLE",
+    "rule_statuses": ["FAIL", "PASS", "PASS"],
+    "evidence_quotes": [
+      "Every participant must pay a $20 attendance fee.",
+      "We will teach open-source software development at a workshop.",
+      "All learning materials will be published openly."
+    ],
+    "policy_result": {"failure_reasons": ["INELIGIBLE"], "policy": "chartergate/rules-v1", "satisfied": false},
+    "ballot_after_screening": {"closed": false, "no": 0, "outcome": "OPEN", "yes": 0},
+    "recorded_vote": {"choice": "", "found": false},
+    "browser_confirmed": {"heading": "Voting is blocked by the contract", "vote_buttons_present": false, "close_ballot_button_present": false, "revise_button_present": true},
+    "vote_simulation": {"checked_at": "2026-09-20T14:38:59.541Z", "execution_result": "ERROR", "rejection": "[EXPECTED] VOTING_BLOCKED:INELIGIBLE", "state_unchanged": true, "transaction_broadcast": false}
+  },
+  "clarification_proposal": {
+    "id": "8cdffc8accb7dd2a480cd85633af14152da5cb6010cd0341cdbe56b6ddd1eeed",
+    "title": "Open-source developer meetup",
+    "body": "We will teach open-source software development at a meetup. Learning materials will be published openly.",
+    "created_at": "2026-09-20T14:41:24.978890Z",
+    "verdict": "NEEDS_CLARIFICATION",
+    "rule_statuses": ["UNCLEAR", "PASS", "PASS"],
+    "evidence_quotes": ["", "We will teach open-source software development at a meetup.", "Learning materials will be published openly."],
+    "policy_result": {"failure_reasons": ["NEEDS_CLARIFICATION"], "policy": "chartergate/rules-v1", "satisfied": false},
+    "ballot_after_screening": {"closed": false, "no": 0, "outcome": "OPEN", "yes": 0},
+    "recorded_vote": {"choice": "", "found": false},
+    "browser_confirmed": {"heading": "Voting is blocked by the contract", "vote_buttons_present": false, "close_ballot_button_present": false, "revise_button_present": true},
+    "vote_simulation": {"checked_at": "2026-09-20T14:43:07.176Z", "execution_result": "ERROR", "rejection": "[EXPECTED] VOTING_BLOCKED:NEEDS_CLARIFICATION", "state_unchanged": true, "transaction_broadcast": false},
+    "before_revision_record_sha256": "cba87c0ab636a0d4d2cc2b9f93f1fa57bb85a2bf19d20663eb3b4ebc8a56d1df",
+    "record_hash_encoding": "SHA-256 of UTF-8 JSON.stringify(get_proposal result), recursively sorting object keys lexicographically and preserving array order."
+  },
+  "revision_proposal": {
+    "id": "7af9b3f36adbc159832b2828a3e77c61badae85d4de01a11120013a5f4d848ab",
+    "parent_id": "8cdffc8accb7dd2a480cd85633af14152da5cb6010cd0341cdbe56b6ddd1eeed",
+    "title": "Open-source developer meetup (clarified)",
+    "body": "We will teach open-source software development at a meetup. Learning materials will be published openly. Attendance is free for all participants.",
+    "created_at": "2026-09-20T14:45:47.567605Z",
+    "verdict": "ELIGIBLE",
+    "rule_statuses": ["PASS", "PASS", "PASS"],
+    "evidence_quotes": ["Attendance is free for all participants.", "We will teach open-source software development at a meetup.", "Learning materials will be published openly."],
+    "policy_result": {"failure_reasons": [], "policy": "chartergate/rules-v1", "satisfied": true},
+    "ballot_after_screening": {"closed": false, "no": 0, "outcome": "OPEN", "yes": 0},
+    "recorded_vote": {"choice": "", "found": false},
+    "browser_confirmed": {"status": "Screen revision confirmed on Studio Next.", "vote_yes_enabled": true, "vote_no_enabled": true, "close_ballot_enabled": false, "view_preserved_original_present": true, "view_preserved_original_navigation_passed": true, "both_records_visible_in_list": true},
+    "original_record_unchanged": true,
+    "original_record_sha256_after_revision": "cba87c0ab636a0d4d2cc2b9f93f1fa57bb85a2bf19d20663eb3b4ebc8a56d1df",
+    "original_policy_after_revision": {"failure_reasons": ["NEEDS_CLARIFICATION"], "policy": "chartergate/rules-v1", "satisfied": false}
+  },
+  "release_readback": {
+    "checked_at": "2026-09-20T14:48:03.832Z",
+    "chain_id": 61997,
+    "live_source_matches": true,
+    "source_sha256": "73c9d30c5cd164e39c38d6235975bea7c1cecca0634e9ba2150183a9b2df9c73",
+    "anonymous_http_200_and_exact_local_bytes": ["/", "/contract/chartergate.py", "/contract/deployment.json", "/contract/negative-checks.json"],
+    "new_browser_wallet_evidence_public_http_status": 404,
+    "github_source_access": "gh repo view sanity456/chartergate could not resolve the repository. Source publication and reviewer access remain outstanding."
+  },
+  "transactions": [
+    {
+      "action": "create_community",
+      "hash": "0x0d10c982179e9c1b573e6ecb4b690dda54eb16ce9f42ae32bcb7996b694d70ed",
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "state_readback_passed": true,
+      "browser_confirmed": true,
+      "validators": [
+        {"mode": "leader", "vote": null, "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "idle", "execution_result": "ERROR"}
+      ]
+    },
+    {
+      "action": "screen_eligible_proposal",
+      "hash": "0x99ab801d161165ca0692d97da2facf7947c9d474e97cadbfb498cc5881108658",
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "state_readback_passed": true,
+      "browser_confirmed": true,
+      "validators": [
+        {"mode": "leader", "vote": null, "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"}
+      ]
+    },
+    {
+      "action": "vote_yes",
+      "hash": "0xb11ba959ae7354d4764f3d0c46c09ebc077bfd4f2018677bb26f22c43decdb44",
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "state_readback_passed": true,
+      "browser_confirmed": true,
+      "validators": [
+        {"mode": "leader", "vote": null, "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "idle", "execution_result": "ERROR"}
+      ]
+    },
+    {
+      "action": "close_ballot",
+      "hash": "0xf9cf2dbe50700acc3ac8c9cb82251afa0e1c88f42db409626b96a5d9626c227a",
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "state_readback_passed": true,
+      "browser_confirmed": true,
+      "quoted_protocol_fee_deposit_test_GEN": "0.000378495600010352",
+      "validators": [
+        {"mode": "leader", "vote": null, "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "idle", "execution_result": "ERROR", "error_code": "CONSENSUS_VALIDATOR_QUORUM_REACHED"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "idle", "execution_result": "ERROR", "error_code": "CONSENSUS_VALIDATOR_QUORUM_REACHED"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"}
+      ]
+    },
+    {
+      "action": "screen_ineligible_proposal",
+      "hash": "0x77da1957e5ae172661115b9062063286156c42b676ce5a4b2ad92678fbd33a7b",
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "state_readback_passed": true,
+      "browser_confirmed": true,
+      "quoted_protocol_fee_deposit_test_GEN": "0.000391932000010352",
+      "validators": [
+        {"mode": "leader", "vote": null, "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "idle", "execution_result": "ERROR", "error_code": "CONSENSUS_VALIDATOR_QUORUM_REACHED"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "idle", "execution_result": "ERROR", "error_code": "CONSENSUS_VALIDATOR_QUORUM_REACHED"}
+      ]
+    },
+    {
+      "action": "screen_clarification_proposal",
+      "hash": "0xfde52ddb1581ee2e4198b2e65430385d9ca9aeb71b23b91ca5b1b0771e39e429",
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "state_readback_passed": true,
+      "browser_confirmed": true,
+      "quoted_protocol_fee_deposit_test_GEN": "0.000391471200010352",
+      "validators": [
+        {"mode": "leader", "vote": null, "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "idle", "execution_result": "ERROR", "error_code": "CONSENSUS_VALIDATOR_QUORUM_REACHED"},
+        {"mode": "validator", "vote": "idle", "execution_result": "ERROR", "error_code": "CONSENSUS_VALIDATOR_QUORUM_REACHED"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"}
+      ]
+    },
+    {
+      "action": "screen_revision",
+      "hash": "0x0972342bc9298d87f0fbe54cba7ca28e499e4bb37111b7b09c62b32857c0b06a",
+      "status": "FINALIZED",
+      "execution_success": true,
+      "execution_result": "FINISHED_WITH_RETURN",
+      "state_readback_passed": true,
+      "browser_confirmed": true,
+      "quoted_protocol_fee_deposit_test_GEN": "0.000391568400010352",
+      "validators": [
+        {"mode": "leader", "vote": null, "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "idle", "execution_result": "ERROR", "error_code": "CONSENSUS_VALIDATOR_QUORUM_REACHED"},
+        {"mode": "validator", "vote": "idle", "execution_result": "ERROR", "error_code": "CONSENSUS_VALIDATOR_QUORUM_REACHED"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"},
+        {"mode": "validator", "vote": "agree", "execution_result": "SUCCESS"}
+      ]
+    }
+  ]
+}

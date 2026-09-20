@@ -36,6 +36,24 @@ await copyFile(
   new URL("../deployments/negative-checks.json", import.meta.url),
   new URL("negative-checks.json", dest),
 );
+const walletEvidence = new URL(
+  "../deployments/browser-wallet-test.json",
+  import.meta.url,
+);
+const walletReport = JSON.parse(await readFile(walletEvidence, "utf8"));
+assert.equal(walletReport.contract_address, DEPLOYMENT.address);
+assert.equal(walletReport.chain_id, NETWORK.id);
+assert.equal(
+  walletReport.complete,
+  true,
+  "Scoped browser-wallet flow evidence is required.",
+);
+assert.ok(
+  walletReport.transactions.every(
+    (tx) => tx.status === "FINALIZED" && tx.execution_success,
+  ),
+);
+await copyFile(walletEvidence, new URL("browser-wallet-test.json", dest));
 console.log(
   "Release bindings and exact source verified. Public source/evidence exported.",
 );
