@@ -1,55 +1,55 @@
-# CharterGate — Builder submission draft
+# CharterGate v2 — resubmission fields
 
-This is a normal Builder project submission, not a hackathon entry. Copy into matching fields only; this document is not a submitted form.
+Normal Builder contribution, not a hackathon entry. The owner uploads the logo and clicks Resubmit.
 
-## Title
+## Project name
 
-CharterGate — charter-aware proposal screening and gated community voting
+CharterGate
+
+## Tags
+
+Governance / Proposal Screening / Quorum Enforcement
+
+## One-liner (under 180 characters)
+
+GenLayer-native proposal screening with validator-checked explanations, same-text appeals and deadline-based community voting.
 
 ## Description (under 1,000 characters)
 
-CharterGate is a GenLayer-native prototype for low-stakes community governance. A community defines an immutable charter, voter list and quorum. Its intelligent contract screens proposal details against every rule, records cited evidence and independently validated rule decisions, and classifies proposals as Eligible, Ineligible or Needs clarification. Only eligible proposals can receive votes; the contract enforces this gate. Authors can revise blocked proposals into new linked records without erasing the original. Allowed wallets vote once, and the owner can close after quorum. Seven user-approved desktop Chrome/MetaMask transactions verified creation, screening, voting, closure and revision on Studio Next (61997). Read-only simulations also verified that blocked proposals reject votes. Source, deployment evidence and test results are provided. This is not a treasury or production DAO, and AI screening does not prove real-world truth.
+CharterGate screens community proposals against immutable charter rules using GenLayer. Validators independently assess each rule and check that every leader quote and reason supports its decision. Only eligible proposals can receive votes. Blocked authors can request one unchanged-text appeal after a cooldown or submit a linked revision; original records remain intact. Proposal IDs include the author's address to prevent copied text from reserving another author's ID. Communities set an immutable voting window. No one can close early; any wallet can finalize after the deadline. Missing quorum and ties do not pass. V2 includes live hostile-prompt and ambiguous-rule tests, author-isolation and appeal evidence, plus deterministic regressions. Membership remains creator-selected. This is a low-stakes prototype, not a treasury or identity system; screening does not verify future delivery.
 
 ## Website
 
 https://chartergate-studionet.vercel.app/
 
-## GitHub repository
+## GitHub
 
 https://github.com/sanity456/chartergate
 
-## Optional contract link
+## Contract link
 
-https://explorer-studio-dev.genlayer.com/address/0x132EfCaf14b265a7E936174DCb04b947eCA892e4
+https://explorer-studio-dev.genlayer.com/address/0x75bd5c02cc488eCee4DC5a2E865FD458204cB1f0
 
-Network: Studio Next / development preview, chain 61997. Do not label it stable Studio 61999 or Bradbury. If a portal rejects a supported URL format, retain the exact URL as Other evidence or in the description; do not substitute an unrelated explorer or contract.
+Studio Next, chain 61997. Replace the old v1 address in the submission; do not substitute stable Studio or Bradbury.
 
-## Evidence entries
+## How-to steps
 
-| Type | Link | What it proves |
-| --- | --- | --- |
-| GitHub Repository | https://github.com/sanity456/chartergate | Source, pinned dependencies, tests and reproduction instructions |
-| GitHub File | https://github.com/sanity456/chartergate/blob/main/contracts/chartergate.py | Native contract implementation |
-| GitHub File | https://github.com/sanity456/chartergate/blob/main/deployments/browser-wallet-test.json | Seven real user-approved transactions, blocked-vote simulations and immutable revision history |
-| GitHub File | https://github.com/sanity456/chartergate/blob/main/docs/review-readiness.md | Test scope and limitations |
-| GitHub File | https://github.com/sanity456/chartergate/blob/main/docs/submission-review.md | Fresh chain, receipt, policy and public-link checks |
-| Other | https://chartergate-studionet.vercel.app/contract/browser-wallet-test.json | Same downloadable real-wallet evidence |
+1. **Open the review community:** Open the website and select “CharterGate v2 review” followed by its timestamp. No wallet is required to inspect records.
+2. **Check the decisions:** Open the free, paid, missing-details and hostile proposals. Inspect each rule's status, cited quote and reason. Paid and hostile proposals are blocked.
+3. **Check appeal history:** Open the same-text appeal, then “View preserved original.” Both bodies match; the original remains unchanged.
+4. **Check neutral closure:** Inspect the free workshop's PASSED ballot, 1 Yes / 0 No, fixed deadline and finalizer in linked evidence. A non-owner finalized after the deadline.
+5. **Try your own workflow:** Connect on chain 61997, obtain free test GEN, create a community including your wallet, quorum 1 and a 5-minute window. Screen, vote before the deadline and finalize after it. Screen missing details to test the same-text appeal after 60 seconds.
 
-No demo video is required for this normal Builder submission, as confirmed by the submitter. Leave any optional video field empty. Do not reuse the TranslateCheck video.
+## Expected verification outcome (under 500 characters)
 
-## Logo
+The v2 review community shows Eligible, Ineligible and Needs clarification decisions with per-rule evidence. Paid and hostile proposals cannot receive votes. The same-text appeal links to an unchanged original. Different authors have distinct IDs for identical text. A non-owner finalized the eligible ballot after its fixed deadline (PASSED, 1 Yes/0 No). The ambiguous charter yields Needs clarification. Linked evidence includes successful receipts and rejected-write simulations.
 
-Upload `public/chartergate-logo.png`: a 1024 × 1024 PNG export of the existing CharterGate logo in `public/favicon.svg`. The submitter uploads the logo and presses the final Submit button themselves.
+## Evidence
 
-## Reviewer reproduction
+- **GitHub Repository:** https://github.com/sanity456/chartergate
+- **GitHub File:** https://github.com/sanity456/chartergate/blob/main/docs/steward-response-v2.md
+- **GitHub File:** https://github.com/sanity456/chartergate/blob/main/deployments/studio-next-v2.json
+- **GitHub File:** https://github.com/sanity456/chartergate/blob/main/deployments/negative-checks-v2.json
+- **GenLayer Explorer Contract:** the exact v2 explorer URL above.
 
-1. Open the public app and select CharterGate Wallet Test. Reading requires no wallet signature.
-2. Inspect the free workshop: Eligible, with a PASSED closed ballot (1 Yes / 0 No).
-3. Inspect the paid workshop: the free-entry rule fails and voting is blocked.
-4. Inspect the original developer meetup: the cost rule is unclear and voting is blocked.
-5. Inspect the clarified meetup: all three rules pass. View preserved original returns the unchanged clarification record.
-6. To sign your own tests, connect a supported wallet on chain 61997, obtain free test GEN, create your own community and include your wallet in its voter list.
-
-## Disclosures
-
-Natural-language screening can be wrong. It evaluates written commitments, not future delivery. Public text/wallet addresses are on-chain. The owner decides when to close once quorum is reached; there is no deadline, appeal, treasury, token weighting or identity proof. Studio Next can reset. Real signing was tested with desktop Chrome/MetaMask; other wallets and mobile signing are unverified. Test evidence distinguishes successful execution from finalization and discloses validators cancelled after quorum. Recheck source, chain, links and deployment state before submission. The user submits the final form.
+No demo video required. Upload `public/chartergate-logo-cg.png`. Do not use v1 MetaMask transactions as v2 signing evidence.

@@ -1,0 +1,197 @@
+{
+  "checked_at": "2026-09-20T20:58:37.604Z",
+  "chain_id": 61997,
+  "address": "0x75bd5c02cc488eCee4DC5a2E865FD458204cB1f0",
+  "source_sha256": "4d78b8fb0b760409f4b17cef70c52de4e6064c8dc578265e6d3d12aa7b3d8388",
+  "read_only": true,
+  "new_transactions_broadcast": 0,
+  "checks": [
+    {
+      "case": "ineligible",
+      "method": "vote",
+      "proposal_id": "5e1b4fe43fac3dfc867df9c2726d85b2d1d3ae88b8931d4af22bfe967ed43b31",
+      "rejection": "[EXPECTED] VOTING_BLOCKED:INELIGIBLE",
+      "state_unchanged": true,
+      "transaction_broadcast": false,
+      "checked_at": "2026-09-20T20:59:31.242Z",
+      "ballot_deadline_unix": 0,
+      "simulation_datetime": "2026-09-20T20:59:28.000Z",
+      "simulation_time_source": "latest RPC block timestamp; simulation only, not a broadcast override"
+    },
+    {
+      "case": "clarification",
+      "method": "vote",
+      "proposal_id": "cf4ac20387e38b86f604e2d38613361137602b696961ea27e7bbd90b83090436",
+      "rejection": "[EXPECTED] VOTING_BLOCKED:NEEDS_CLARIFICATION",
+      "state_unchanged": true,
+      "transaction_broadcast": false,
+      "checked_at": "2026-09-20T20:59:37.972Z",
+      "ballot_deadline_unix": 0,
+      "simulation_datetime": "2026-09-20T20:59:34.000Z",
+      "simulation_time_source": "latest RPC block timestamp; simulation only, not a broadcast override"
+    },
+    {
+      "case": "hostile_injection",
+      "method": "vote",
+      "proposal_id": "3600c9b181573eea4b653300f39e3c375854278680b827f28de47b51d0f63618",
+      "rejection": "[EXPECTED] VOTING_BLOCKED:INELIGIBLE",
+      "state_unchanged": true,
+      "transaction_broadcast": false,
+      "checked_at": "2026-09-20T20:59:44.731Z",
+      "ballot_deadline_unix": 0,
+      "simulation_datetime": "2026-09-20T20:59:41.000Z",
+      "simulation_time_source": "latest RPC block timestamp; simulation only, not a broadcast override"
+    },
+    {
+      "case": "ambiguous_charter",
+      "method": "vote",
+      "proposal_id": "2a79ea4f9d1f4c82a656daad0975205a24fdb0b5bdd088a83b81df00eebfdf19",
+      "rejection": "[EXPECTED] VOTING_BLOCKED:NEEDS_CLARIFICATION",
+      "state_unchanged": true,
+      "transaction_broadcast": false,
+      "checked_at": "2026-09-20T20:59:51.353Z",
+      "ballot_deadline_unix": 0,
+      "simulation_datetime": "2026-09-20T20:59:48.000Z",
+      "simulation_time_source": "latest RPC block timestamp; simulation only, not a broadcast override"
+    },
+    {
+      "case": "closed_ballot",
+      "method": "vote",
+      "proposal_id": "23b4963254e12fb20ba2b49e453ac7bd797045409d3a88c037871d5d977fa727",
+      "rejection": "[EXPECTED] BALLOT_CLOSED",
+      "state_unchanged": true,
+      "transaction_broadcast": false,
+      "checked_at": "2026-09-20T20:59:58.150Z",
+      "ballot_deadline_unix": 1789937249,
+      "simulation_datetime": "2026-09-20T20:59:55.000Z",
+      "simulation_time_source": "latest RPC block timestamp; simulation only, not a broadcast override"
+    },
+    {
+      "case": "appeal_limit",
+      "method": "appeal_proposal",
+      "proposal_id": "cf4ac20387e38b86f604e2d38613361137602b696961ea27e7bbd90b83090436",
+      "rejection": "[EXPECTED] APPEAL_LIMIT_REACHED",
+      "state_unchanged": true,
+      "transaction_broadcast": false,
+      "checked_at": "2026-09-20T21:00:05.376Z",
+      "ballot_deadline_unix": 0,
+      "simulation_datetime": "2026-09-20T21:00:02.000Z",
+      "simulation_time_source": "latest RPC block timestamp; simulation only, not a broadcast override"
+    },
+    {
+      "case": "appeal_author_only",
+      "method": "appeal_proposal",
+      "proposal_id": "cf4ac20387e38b86f604e2d38613361137602b696961ea27e7bbd90b83090436",
+      "rejection": "[EXPECTED] ONLY_AUTHOR_CAN_APPEAL",
+      "state_unchanged": true,
+      "transaction_broadcast": false,
+      "checked_at": "2026-09-20T21:00:14.558Z",
+      "ballot_deadline_unix": 0,
+      "simulation_datetime": "2026-09-20T21:00:09.000Z",
+      "simulation_time_source": "latest RPC block timestamp; simulation only, not a broadcast override"
+    },
+    {
+      "case": "same_author_reroll",
+      "method": "submit_proposal",
+      "proposal_id": "cf4ac20387e38b86f604e2d38613361137602b696961ea27e7bbd90b83090436",
+      "rejection": "[EXPECTED] IDENTICAL_PROPOSAL_ALREADY_SCREENED",
+      "state_unchanged": true,
+      "transaction_broadcast": false,
+      "checked_at": "2026-09-20T21:00:21.217Z",
+      "ballot_deadline_unix": 0,
+      "simulation_datetime": "2026-09-20T21:00:18.000Z",
+      "simulation_time_source": "latest RPC block timestamp; simulation only, not a broadcast override"
+    },
+    {
+      "case": "expired_unclosed_ballot",
+      "method": "vote",
+      "proposal_id": "0c1111a5bb5aeb3994535c35f6e043f2996c4bc25756a80783f00459852bda02",
+      "rejection": "[EXPECTED] VOTING_DEADLINE_REACHED",
+      "state_unchanged": true,
+      "transaction_broadcast": false,
+      "checked_at": "2026-09-20T21:00:28.229Z",
+      "ballot_deadline_unix": 1789937944,
+      "simulation_datetime": "2026-09-20T21:00:25.000Z",
+      "simulation_time_source": "latest RPC block timestamp; simulation only, not a broadcast override"
+    }
+  ],
+  "transactions": [
+    {
+      "action": "deploy",
+      "hash": "0x432aa93c3aae60c60eef92be76b8e8a1fccf8b457bcf12297face21f0968d491",
+      "status": "FINALIZED",
+      "execution_success": true
+    },
+    {
+      "action": "create_community",
+      "hash": "0x27c1b97f105a7e4f0343dd920995abeae1e831721dabae2d894847f2e0c330ed",
+      "status": "FINALIZED",
+      "execution_success": true
+    },
+    {
+      "action": "screen_eligible",
+      "hash": "0x5ef33dc07dbea9f192a8d36e72536ed139dc2f1b521c6507fff6eb296d4523b6",
+      "status": "FINALIZED",
+      "execution_success": true
+    },
+    {
+      "action": "vote_yes",
+      "hash": "0x444af7d8ff35316079da9306cfdb84e3162ae4eda8f0403e5ecc4370e09eb10f",
+      "status": "FINALIZED",
+      "execution_success": true
+    },
+    {
+      "action": "screen_ineligible",
+      "hash": "0xa6b807014c12e57e46f7664540408196281c9b20ef27fad23b881a87f8baa860",
+      "status": "FINALIZED",
+      "execution_success": true
+    },
+    {
+      "action": "screen_clarification",
+      "hash": "0xadedc93649ddd57ee47a837e2771ff8a4b1c4711354121129f095938a03385b5",
+      "status": "FINALIZED",
+      "execution_success": true
+    },
+    {
+      "action": "screen_hostile_injection",
+      "hash": "0x464797b5d39f4a0f0d592434335df43f5045530256dea061e24d3193d2ead1ba",
+      "status": "FINALIZED",
+      "execution_success": true
+    },
+    {
+      "action": "create_ambiguous_community",
+      "hash": "0x1f8acaf11e19e2e0a7fa561ea30084cfbf6d4006986a7bfd21a032e05dfa9c53",
+      "status": "FINALIZED",
+      "execution_success": true
+    },
+    {
+      "action": "screen_ambiguous_charter",
+      "hash": "0x2c02a3b24ad5ecee2be7dd7742db93ab7aa4310be290b08e6b52529dc60d44e7",
+      "status": "FINALIZED",
+      "execution_success": true
+    },
+    {
+      "action": "same_body_appeal",
+      "hash": "0xe1a06bc1e06c49b9f4ee369f6febabfca26c11d594106fff9405e855b4705aa5",
+      "status": "FINALIZED",
+      "execution_success": true
+    },
+    {
+      "action": "screen_second_author_same_body",
+      "hash": "0x73bf5f3a9b272a5e79ce1747f54b8445c9b70f80a7fad49aacdee48a326dcb96",
+      "status": "FINALIZED",
+      "execution_success": true
+    },
+    {
+      "action": "neutral_finalize",
+      "hash": "0xc581487f56b3294728525123de59ab6f04e1531da318139ae0a421a171114f53",
+      "status": "FINALIZED",
+      "execution_success": true
+    }
+  ],
+  "source_exact": true,
+  "unchanged_text_appeal_and_original_preserved": true,
+  "author_bound_ids": true,
+  "non_owner_finalized": true,
+  "passed": true
+}

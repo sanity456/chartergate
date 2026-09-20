@@ -5,6 +5,7 @@ export type Community = {
   rules: string[];
   voters: string[];
   quorum: number;
+  voting_seconds?: number;
   owner: string;
   created_at: string;
   policy: string;
@@ -26,6 +27,8 @@ export type Proposal = {
   author: string;
   parent_id: string;
   created_at: string;
+  created_at_unix?: number;
+  kind?: "INITIAL" | "REVISION" | "APPEAL";
   policy: string;
   review: { verdict: Verdict; checks: Check[] };
   ballot: {
@@ -34,6 +37,8 @@ export type Proposal = {
     closed: boolean;
     outcome: string;
     closed_at?: string;
+    deadline_unix?: number;
+    finalized_by?: string;
   };
 };
 export type Page<T> = { items: T[]; total: number; next_offset: number };
@@ -160,4 +165,16 @@ export function validateProposal(title: string, body: string) {
     throw Error("Enter a title of 1–120 characters.");
   if (!body.trim() || Array.from(body).length > 5000)
     throw Error("Enter proposal details of 1–5,000 characters.");
+}
+
+export function validateVotingWindow(minutes: number) {
+  if (!Number.isInteger(minutes) || minutes < 5 || minutes > 10080)
+    throw Error("Choose a whole number of minutes from 5 to 10,080 (7 days).");
+  return minutes * 60;
+}
+
+// UI hints only; the contract checks its transaction time independently.
+export function ballotWindow(deadline: number | undefined, now: number) {
+  const timed = typeof deadline === "number" && deadline > 0;
+  return { timed, ended: timed && now >= deadline, ready: !timed || now > 0 };
 }

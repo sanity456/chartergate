@@ -67,6 +67,8 @@ import {
   shortAddress,
   validateCommunity,
   validateProposal,
+  validateVotingWindow,
+  ballotWindow,
   type Community,
   type Proposal,
   type Page,
@@ -90,6 +92,7 @@ type ModelTool = {
 };
 const emptyPage = { items: [], total: 0, next_offset: 0 };
 const chainLink = `${NETWORK.explorer}/address/${address}`;
+const V2 = DEPLOYMENT.policy === "chartergate/rules-v2";
 
 export default function Workspace() {
   const [communities, setCommunities] = useState<Page<Community>>(emptyPage),
@@ -111,6 +114,9 @@ export default function Workspace() {
     [rulesText, setRulesText] = useState(EXAMPLE_RULES.join("\n")),
     [votersText, setVotersText] = useState(""),
     [quorum, setQuorum] = useState("1");
+  const [votingMinutes, setVotingMinutes] = useState("1440");
+  const [nowSeconds, setNowSeconds] = useState(0);
+  const [appealState, setAppealState] = useState({ key: "", id: "" });
   const [title, setTitle] = useState(""),
     [body, setBody] = useState(""),
     [parentId, setParentId] = useState(""),
@@ -128,6 +134,35 @@ export default function Workspace() {
   const canWrite = configured && !!account && !busy && !pending;
   const voteKey = (selectedProposal?.id || "") + ":" + (account || "");
   const voteChoice = voteRecord.key === voteKey ? voteRecord.choice : "";
+  const windowState = ballotWindow(
+    selectedProposal?.ballot.deadline_unix,
+    nowSeconds,
+  );
+  const appealLoaded = appealState.key === selectedProposal?.id;
+  const appealId = appealLoaded ? appealState.id : "";
+
+  useEffect(() => {
+    const timer = setInterval(
+      () => setNowSeconds(Math.floor(Date.now() / 1000)),
+      1000,
+    );
+    return () => clearInterval(timer);
+  }, []);
+  useEffect(() => {
+    if (!V2 || !selectedProposal) return;
+    let active = true;
+    const id = selectedProposal.id;
+    void read<{ found: boolean; proposal_id: string }>("get_appeal", [id])
+      .then((result) => {
+        if (active) setAppealState({ key: id, id: result.proposal_id });
+      })
+      .catch((e) => {
+        if (active) setError(safeError(e));
+      });
+    return () => {
+      active = false;
+    };
+  }, [selectedProposal]);
 
   const loadCommunities = useCallback(async () => {
     if (!configured) return;
@@ -352,16 +387,20 @@ export default function Workspace() {
           .filter(Boolean),
         voters = votersText.split(/[\s,]+/).filter(Boolean);
       validateCommunity(name, rules, voters, Number(quorum));
+      const votingSeconds = V2
+        ? validateVotingWindow(Number(votingMinutes))
+        : 0;
       if (!requireWallet()) return;
       setAction({
         title: "Create community",
-        description: `Publish ${name} with ${rules.length} fixed rules, ${voters.length} voter wallets, and quorum ${quorum}. These settings cannot be edited. The owner may close ballots after quorum; this can exclude later voters. All data is public on-chain.`,
+        description: `Publish ${name} with ${rules.length} fixed rules, ${voters.length} voter wallets, and quorum ${quorum}. These settings cannot be edited. ${V2 ? `Every eligible proposal has a fixed ${votingMinutes}-minute voting window; anyone can finalize after the deadline. Quorum is required to pass, not to close.` : "The owner may close ballots after quorum; this can exclude later voters."} All data is public on-chain.`,
         method: "create_community",
         args: [
           name,
           JSON.stringify(rules),
           JSON.stringify(voters),
           Number(quorum),
+          ...(V2 ? [votingSeconds] : []),
         ],
         communityId: "",
       });
@@ -422,10 +461,22 @@ export default function Workspace() {
   function closeBallot() {
     if (!selectedProposal || !community || !requireWallet()) return;
     setAction({
-      title: "Close ballot",
-      description:
-        "Permanently stop voting and record the result from votes already cast. Remaining voters will not be able to vote. This does not transfer funds.",
+      title: V2 ? "Finalize ballot" : "Close ballot",
+      description: V2
+        ? "Finalize this ballot after its immutable deadline. Any wallet may finalize. Missing quorum records NO QUORUM, not a passing result. The contract checks transaction time; no funds are transferred."
+        : "Permanently stop voting and record the result from votes already cast. Remaining voters will not be able to vote. This does not transfer funds.",
       method: "close_ballot",
+      args: [selectedProposal.id],
+      communityId: community.id,
+    });
+  }
+  function appealProposal() {
+    if (!selectedProposal || !community || !requireWallet() || !V2) return;
+    setAction({
+      title: "Appeal unchanged proposal",
+      description:
+        "Request the one permitted same-text reassessment after the 60-second cooldown. The body and original decision remain unchanged; a new linked decision is created. A different outcome is not guaranteed. This consumes the appeal only if contract execution succeeds.",
+      method: "appeal_proposal",
       args: [selectedProposal.id],
       communityId: community.id,
     });
@@ -813,7 +864,11 @@ export default function Workspace() {
                     {community.quorum} of {community.voters.length}
                     <Vote size={22} />
                   </strong>
-                  <p>Owner can close after quorum</p>
+                  <p>
+                    {V2
+                      ? "Fixed deadline · anyone can finalize"
+                      : "Owner can close after quorum"}
+                  </p>
                 </div>
               </div>
               <Tabs value={tab} onValueChange={setTab}>
@@ -928,10 +983,27 @@ export default function Workspace() {
                       </div>
                       <h2>{selectedProposal.title}</h2>
                       <p className="metadata">
-                        Submitted by {shortAddress(selectedProposal.author)} ·{" "}
+                        {selectedProposal.kind === "APPEAL"
+                          ? "Same-text appeal by "
+                          : "Submitted by "}
+                        {shortAddress(selectedProposal.author)} ·{" "}
                         {selectedProposal.created_at}
                       </p>
                       <p className="proposal-body">{selectedProposal.body}</p>
+                      {appealId && (
+                        <button
+                          className="text-button"
+                          onClick={() =>
+                            void read<Proposal>("get_proposal", [appealId])
+                              .then((p) => {
+                                if (p.found) setSelectedProposal(p);
+                              })
+                              .catch((e) => setError(safeError(e)))
+                          }
+                        >
+                          View same-text appeal <ArrowUpRight size={15} />
+                        </button>
+                      )}
                       {selectedProposal.parent_id && (
                         <button
                           className="text-button"
@@ -949,6 +1021,13 @@ export default function Workspace() {
                         </button>
                       )}
                       <h3 className="review-heading">Rule-by-rule decision</h3>
+                      {V2 && (
+                        <p className="muted">
+                          Validators independently check decisions and whether
+                          every quote and reason supports them. This does not
+                          verify future delivery.
+                        </p>
+                      )}
                       {selectedProposal.review.checks.map((check) => (
                         <div className="check-row" key={check.rule_index}>
                           <div className="row">
@@ -981,7 +1060,9 @@ export default function Workspace() {
                                     "_",
                                     " ",
                                   )
-                                : "Open"}
+                                : windowState.ended
+                                  ? "Voting ended — finalize"
+                                  : "Open"}
                             </span>
                           </div>
                           <div className="tally">
@@ -998,6 +1079,17 @@ export default function Workspace() {
                               /{community.quorum}
                             </p>
                           </div>
+                          {windowState.timed && (
+                            <p className="muted">
+                              Voting deadline (UTC):{" "}
+                              {new Date(
+                                selectedProposal.ballot.deadline_unix! * 1000,
+                              ).toISOString()}
+                              . No early closure. Anyone may finalize afterward,
+                              even without quorum. Browser time is an estimate;
+                              the contract enforces transaction time.
+                            </p>
+                          )}
                           {!selectedProposal.ballot.closed && (
                             <>
                               <p className="muted">
@@ -1016,6 +1108,8 @@ export default function Workspace() {
                                   className="button"
                                   disabled={
                                     !canWrite ||
+                                    windowState.ended ||
+                                    !windowState.ready ||
                                     !community.voters.includes(
                                       account?.toLowerCase() || "",
                                     ) ||
@@ -1029,6 +1123,8 @@ export default function Workspace() {
                                   className="button secondary"
                                   disabled={
                                     !canWrite ||
+                                    windowState.ended ||
+                                    !windowState.ready ||
                                     !community.voters.includes(
                                       account?.toLowerCase() || "",
                                     ) ||
@@ -1038,18 +1134,22 @@ export default function Workspace() {
                                 >
                                   Vote no
                                 </button>
-                                {account?.toLowerCase() === community.owner && (
+                                {(V2 ||
+                                  account?.toLowerCase() ===
+                                    community.owner) && (
                                   <button
                                     className="button secondary"
                                     disabled={
                                       !canWrite ||
-                                      selectedProposal.ballot.yes +
-                                        selectedProposal.ballot.no <
-                                        community.quorum
+                                      (V2
+                                        ? !windowState.ended
+                                        : selectedProposal.ballot.yes +
+                                            selectedProposal.ballot.no <
+                                          community.quorum)
                                     }
                                     onClick={closeBallot}
                                   >
-                                    Close ballot
+                                    {V2 ? "Finalize ballot" : "Close ballot"}
                                   </button>
                                 )}
                               </div>
@@ -1064,9 +1164,37 @@ export default function Workspace() {
                             {selectedProposal.review.verdict === "INELIGIBLE"
                               ? "A charter rule was contradicted."
                               : "Required details are missing or unclear."}{" "}
-                            The author can revise and request a new screening.
+                            {V2
+                              ? selectedProposal.kind === "APPEAL" || appealId
+                                ? "The same-text appeal has been used. The author may submit a changed-body revision. "
+                                : "The author can request one same-text appeal after 60 seconds, or revise the proposal. "
+                              : "The author can revise and request a new screening."}
                             The original decision remains.
                           </p>
+                          {V2 &&
+                            account?.toLowerCase() ===
+                              selectedProposal.author &&
+                            selectedProposal.kind !== "APPEAL" &&
+                            !appealId && (
+                              <button
+                                className="button secondary"
+                                disabled={
+                                  !canWrite ||
+                                  !appealLoaded ||
+                                  nowSeconds <
+                                    (selectedProposal.created_at_unix || 0) + 60
+                                }
+                                onClick={appealProposal}
+                              >
+                                Appeal unchanged proposal
+                              </button>
+                            )}
+                          {V2 && selectedProposal.kind === "APPEAL" && (
+                            <p>
+                              This same-text appeal has been used. Its original
+                              decision remains accessible above.
+                            </p>
+                          )}
                           {account?.toLowerCase() ===
                             selectedProposal.author && (
                             <button
@@ -1103,11 +1231,15 @@ export default function Workspace() {
                             </p>
                             <div className="metadata">
                               {shortAddress(p.author)} ·{" "}
-                              {p.parent_id ? "Revision · " : ""}
+                              {p.kind === "APPEAL"
+                                ? "Same-text appeal · "
+                                : p.parent_id
+                                  ? "Revision · "
+                                  : ""}
                               {p.review.verdict === "ELIGIBLE"
                                 ? p.ballot.closed
                                   ? p.ballot.outcome.replaceAll("_", " ")
-                                  : `${p.ballot.yes + p.ballot.no} votes · ballot open`
+                                  : `${p.ballot.yes + p.ballot.no} votes · ${ballotWindow(p.ballot.deadline_unix, nowSeconds).ended ? "voting ended" : "ballot open"}`
                                 : "Voting blocked"}
                             </div>
                           </div>
@@ -1184,11 +1316,9 @@ export default function Workspace() {
                     </ul>
                     <h3>Ballot rules</h3>
                     <p>
-                      Minimum {community.quorum} vote
-                      {community.quorum === 1 ? "" : "s"} to close. A strict yes
-                      majority passes; ties do not pass. The owner chooses when
-                      to close after quorum, so not every listed voter is
-                      guaranteed time to vote.
+                      {V2
+                        ? `Voting stays open for ${Math.floor((community.voting_seconds || 0) / 60)} minutes after screening. Anyone can finalize after the fixed deadline. At least ${community.quorum} votes and a strict yes majority are required to pass. Missing quorum records NO QUORUM; ties do not pass.`
+                        : `Minimum ${community.quorum} votes to close. A strict yes majority passes; ties do not pass. The owner chooses when to close after quorum, so not every listed voter is guaranteed time to vote.`}
                     </p>
                     <p className="metadata mono">Owner: {community.owner}</p>
                     <p className="metadata mono">
@@ -1252,7 +1382,11 @@ export default function Workspace() {
                 </a>{" "}
                 ·{" "}
                 <a
-                  href="/contract/chartergate.py"
+                  href={
+                    V2
+                      ? "/contract/chartergate_v2.py"
+                      : "/contract/chartergate.py"
+                  }
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -1260,16 +1394,35 @@ export default function Workspace() {
                 </a>
                 {" · "}
                 <a
-                  href="/contract/browser-wallet-test.json"
+                  href={
+                    V2
+                      ? "/contract/deployment-v2.json"
+                      : "/contract/browser-wallet-test.json"
+                  }
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Wallet test evidence
+                  {V2 ? "V2 test evidence" : "Wallet test evidence"}
                 </a>
               </p>
             )}
             <details>
               <summary>Deployment & limitations</summary>
+              {V2 && (
+                <p>
+                  V2 is a new contract, not a migration. Earlier communities
+                  remain on the historical{" "}
+                  <a
+                    href={`${NETWORK.explorer}/address/0x132EfCaf14b265a7E936174DCb04b947eCA892e4`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    v1 deployment
+                  </a>
+                  . Create a new community here to use appeals and fixed
+                  deadlines.
+                </p>
+              )}
               <p className="mono">
                 {configured ? address : "Not yet deployed"} · Chain {NETWORK.id}
               </p>
@@ -1278,9 +1431,9 @@ export default function Workspace() {
                 {DEPLOYMENT.sourceSha256 || "Pending verification"}
               </p>
               <p>
-                AI can misinterpret text. Review cited reasons. No appeal
-                system, timed elections, identity verification, or enforceable
-                spending. Studio Next may reset data.
+                {V2
+                  ? "AI can misinterpret text. One author-requested same-text appeal is available for blocked proposals. Membership remains creator-selected and immutable; deadlines cannot be shortened and finalization is permissionless. No identity verification or enforceable spending. Studio Next may reset data."
+                  : "AI can misinterpret text. Review cited reasons. No appeal system, timed elections, identity verification, or enforceable spending. Studio Next may reset data."}
               </p>
             </details>
           </footer>
@@ -1392,7 +1545,9 @@ export default function Workspace() {
               </button>
             )}
             <label>
-              Minimum votes to close (quorum)
+              {V2
+                ? "Minimum votes for a valid result (quorum)"
+                : "Minimum votes to close (quorum)"}
               <input
                 value={quorum}
                 onChange={(e) => setQuorum(e.target.value)}
@@ -1402,9 +1557,24 @@ export default function Workspace() {
                 required
               />
             </label>
+            {V2 && (
+              <label>
+                Voting window in minutes (fixed)
+                <input
+                  value={votingMinutes}
+                  onChange={(e) => setVotingMinutes(e.target.value)}
+                  type="number"
+                  min={5}
+                  max={10080}
+                  step={1}
+                  required
+                />
+              </label>
+            )}
             <p className="muted">
-              The creator can close an eligible ballot once quorum is met. A
-              strict yes majority passes. No money moves.
+              {V2
+                ? "Default: 24 hours. Minimum: 5 minutes. Maximum: 7 days. No early closure, even with quorum. Any wallet can finalize after the deadline. No money moves."
+                : "The creator can close an eligible ballot once quorum is met. A strict yes majority passes. No money moves."}
             </p>
             {error && (
               <p role="alert" className="error-text">

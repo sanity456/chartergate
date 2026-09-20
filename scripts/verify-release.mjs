@@ -3,11 +3,14 @@ import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
 import { DEPLOYMENT } from "../lib/deployment.ts";
 import { NETWORK } from "../lib/network.ts";
-const source = new URL("../contracts/chartergate.py", import.meta.url);
+const v2 = DEPLOYMENT.policy === "chartergate/rules-v2";
+const sourceName = v2 ? "chartergate_v2.py" : "chartergate.py";
+const reportName = v2 ? "studio-next-v2.json" : "studio-next.json";
+const source = new URL("../contracts/" + sourceName, import.meta.url);
 const code = await readFile(source);
 const report = JSON.parse(
   await readFile(
-    new URL("../deployments/studio-next.json", import.meta.url),
+    new URL("../deployments/" + reportName, import.meta.url),
     "utf8",
   ),
 );
@@ -26,6 +29,41 @@ assert.equal(
   "Live workflow evidence is required for a release.",
 );
 const dest = new URL("../public/contract/", import.meta.url);
+if (v2) {
+  assert.equal(report.policy, DEPLOYMENT.policy);
+  assert.equal(report.live_adversarial_passed, true);
+  assert.equal(report.pending, undefined);
+  assert.ok(report.transactions.length >= 12);
+  assert.ok(
+    report.transactions.every(
+      (t) => t.status === "FINALIZED" && t.execution_success,
+    ),
+  );
+  const negative = JSON.parse(
+    await readFile(
+      new URL("../deployments/negative-checks-v2.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  assert.equal(negative.address, DEPLOYMENT.address);
+  assert.equal(negative.source_sha256, DEPLOYMENT.sourceSha256);
+  assert.equal(negative.passed, true);
+  assert.ok(negative.checks.length >= 9);
+  await mkdir(dest, { recursive: true });
+  await copyFile(source, new URL(sourceName, dest));
+  await copyFile(
+    new URL("../deployments/" + reportName, import.meta.url),
+    new URL("deployment-v2.json", dest),
+  );
+  await copyFile(
+    new URL("../deployments/negative-checks-v2.json", import.meta.url),
+    new URL("negative-checks-v2.json", dest),
+  );
+  console.log(
+    "V2 exact source, active binding, live adversarial/workflow and negative evidence verified. V1 evidence retained as history.",
+  );
+  process.exit(0);
+}
 await mkdir(dest, { recursive: true });
 await copyFile(source, new URL("chartergate.py", dest));
 await copyFile(

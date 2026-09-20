@@ -25,6 +25,18 @@ def install():
             return {**response, "ok": json.dumps(response["ok"], ensure_ascii=False)}
         return response
     wasi_mock._handle_llm_request = llm_json_text
+    # The pinned SDK exposes message.raw, but gltest's refresh only updates
+    # typed caller/value fields. Keep the simulated transaction timestamp in
+    # that raw envelope in sync with warp(); never replace contract time logic.
+    original_refresh = VMContext._refresh_gl_message
+    def refresh(vm):
+        original_refresh(vm)
+        sdk = sys.modules.get("genlayer")
+        message = getattr(sdk, "message", None)
+        raw = getattr(message, "raw", None)
+        if isinstance(raw, dict):
+            raw["datetime"] = vm._datetime
+    VMContext._refresh_gl_message = refresh
     if sys.platform == "win32":
         def inject(vm):
             from genlayer import calldata

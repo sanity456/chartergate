@@ -35,3 +35,6 @@ No contract, address, wallet-signing logic or application behavior changed in th
 The portal form must still be inspected and completed in the submitter's Chrome session. At the time of this report, browser access returned no tabs, so this document does not claim the actual form was reviewed or filled. The submitter uploads the logo and performs final submission. No video is required, and no acceptance is guaranteed.
 
 Limits remain: low-stakes text screening only; no truth verification, treasury, identity proof, appeal or voting deadline. The owner can close after quorum. Other wallet extensions and mobile signing are unverified. Studio Next may reset, so rerun the read-only script if submitting later.
+# Historical v1 audit — superseded
+
+This document records the original v1 submission. For the active corrected deployment and new evidence, use [steward-response-v2.md](steward-response-v2.md). Do not describe the v1 receipts or test totals below as v2 verification.

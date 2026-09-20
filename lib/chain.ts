@@ -9,6 +9,7 @@ import { DEPLOYMENT } from "./deployment.ts";
 import { plain, executionSucceeded, receiptStatus } from "./protocol.ts";
 import { assertWalletContext, type Provider } from "./wallet.ts";
 import { preflightSubmission } from "./submission-preflight.ts";
+import { estimateStudioWriteFees } from "./studio-fees.ts";
 export const reader = createClient({ chain: ACTIVE_CHAIN });
 export const address = DEPLOYMENT.address as `0x${string}`;
 export const configured =
@@ -53,7 +54,7 @@ export async function submit(
   onQuote(
     "Simulating this action and estimating the Studio Next protocol fee…",
   );
-  const quote = await client.estimateTransactionFeesForWrite(request);
+  const quote = await estimateStudioWriteFees(client, account, request);
   if (quote.feeValue > 1000000000000000000n)
     throw Error("Quote exceeds 1 test GEN. Nothing was submitted.");
   onQuote("Checking your available test GEN on Studio Next (61997)…");

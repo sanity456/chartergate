@@ -1,5 +1,13 @@
 # CharterGate review checklist
 
+## Superseding v2 review
+
+The material below is **historical v1 evidence**, not the active v2 specification. See [the v2 steward response](steward-response-v2.md), [current submission fields](submission.md), and `deployments/studio-next-v2.json` for the five required remediations, new address, source hash and live adversarial results. V2 adds quote/reason consensus, bounded same-body appeals, author-bound IDs, and fixed deadline-based permissionless closure. V1 wallet signatures are not v2 signing evidence.
+
+---
+
+# Historical v1 checklist
+
 ## Current reviewer status
 
 The Vercel app and GitHub repository are public. Browser-wallet evidence is published at `/contract/browser-wallet-test.json`. Earlier unavailable-link observations below are dated historical results, not current blockers. No demo video is required for this normal Builder submission, as confirmed by the submitter.

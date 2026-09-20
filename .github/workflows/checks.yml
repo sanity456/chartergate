@@ -28,4 +28,5 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - run: genvm-lint check contracts/chartergate.py --json
+      - run: genvm-lint check contracts/chartergate_v2.py --json
       - run: python -m pytest tests/direct -q

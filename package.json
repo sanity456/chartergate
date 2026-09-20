@@ -14,7 +14,7 @@
     "db:generate": "drizzle-kit generate",
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/frontend.test.mjs",
-    "verify:chain": "node --experimental-strip-types scripts/studio-release.mjs --verify"
+    "verify:chain": "node --experimental-strip-types scripts/check-submission.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

@@ -7,6 +7,8 @@ import {
   validateProposal,
   EXAMPLE_RULES,
   plain,
+  validateVotingWindow,
+  ballotWindow,
 } from "../lib/protocol.ts";
 import {
   connectWallet,
@@ -22,7 +24,154 @@ import {
   preflightSubmission,
 } from "../lib/submission-preflight.ts";
 import { NETWORK } from "../lib/network.ts";
+import { parseChainTime, estimateStudioWriteFees } from "../lib/studio-fees.ts";
+import { createFeesDistribution } from "genlayer-js";
 const wallet = "0x1111111111111111111111111111111111111111";
+
+test("simulation time accepts only a valid RPC timestamp", () => {
+  assert.equal(
+    parseChainTime({ timestamp: "0x6ab0470a" }),
+    "2026-09-20T20:50:18.000Z",
+  );
+  for (const block of [
+    null,
+    {},
+    { timestamp: 1789937418 },
+    { timestamp: "0x0" },
+    { timestamp: "2026-09-20" },
+    { timestamp: "0xffffffffffffffffffff" },
+  ])
+    assert.throws(() => parseChainTime(block));
+});
+
+function feeClient(patch = {}) {
+  const calls = [];
+  const distribution = createFeesDistribution({});
+  const client = {
+    estimateTransactionFees: async () => ({
+      distribution,
+      feeValue: 100000000000010352n,
+    }),
+    request: async (request) => {
+      calls.push(request);
+      if (request.method === "eth_chainId") return patch.chain ?? "0xf22d";
+      if (request.method === "eth_getBlockByNumber")
+        return patch.block ?? { timestamp: "0x6ab0470a" };
+      assert.equal(
+        request.method,
+        "sim_estimateTransactionFees",
+        "Never sign or broadcast during estimation",
+      );
+      if (patch.error) throw patch.error;
+      return (
+        patch.result ?? {
+          receipt: { execution_result: "SUCCESS" },
+          recommendedPreset: {
+            distribution,
+            feeValue: "100000000000010352",
+            messageAllocations: [],
+          },
+        }
+      );
+    },
+  };
+  return { client, calls };
+}
+
+test("time-gated fee simulation uses RPC time and exact bigint, not browser time", async () => {
+  const { client, calls } = feeClient();
+  const quote = await estimateStudioWriteFees(client, wallet, {
+    address: wallet,
+    functionName: "appeal_proposal",
+    args: ["proposal"],
+  });
+  assert.equal(quote.feeValue, 100000000000010352n);
+  const simulation = calls.find(
+    (c) => c.method === "sim_estimateTransactionFees",
+  ).params[0];
+  assert.deepEqual(simulation.sim_config, {
+    genvm_datetime: "2026-09-20T20:50:18.000Z",
+  });
+  assert.equal(simulation.fees.feeValue, "100000000000010352");
+  assert.equal(simulation.from, wallet);
+  assert.equal(simulation.transaction_hash_variant, "latest-final");
+});
+
+test("wrong chain and missing RPC time block fee simulation", async () => {
+  for (const patch of [{ chain: "0xf22f" }, { block: {} }]) {
+    const { client, calls } = feeClient(patch);
+    await assert.rejects(
+      estimateStudioWriteFees(client, wallet, {
+        address: wallet,
+        functionName: "vote",
+        args: ["id", "YES"],
+      }),
+    );
+    assert.ok(!calls.some((c) => c.method === "sim_estimateTransactionFees"));
+  }
+});
+
+test("failed fee simulation never falls back to bypass contract checks", async () => {
+  const error = Error("[EXPECTED] APPEAL_COOLDOWN");
+  const { client } = feeClient({ error });
+  await assert.rejects(
+    estimateStudioWriteFees(client, wallet, {
+      address: wallet,
+      functionName: "appeal_proposal",
+      args: ["id"],
+    }),
+    error,
+  );
+});
+
+test("malformed, failed and imprecise fee results fail closed", async () => {
+  for (const result of [
+    {},
+    { receipt: { execution_result: "ERROR" } },
+    {
+      receipt: { execution_result: "SUCCESS" },
+      recommendedPreset: {
+        distribution: {},
+        feeValue: Number.MAX_SAFE_INTEGER + 1,
+      },
+    },
+    {
+      receipt: { execution_result: "SUCCESS" },
+      recommendedPreset: { distribution: {}, feeValue: "-1" },
+    },
+  ]) {
+    const { client } = feeClient({ result });
+    await assert.rejects(
+      estimateStudioWriteFees(client, wallet, {
+        address: wallet,
+        functionName: "close_ballot",
+        args: ["id"],
+      }),
+    );
+  }
+});
+test("v2 voting windows enforce integer duration bounds", () => {
+  assert.equal(validateVotingWindow(5), 300);
+  assert.equal(validateVotingWindow(1440), 86400);
+  assert.equal(validateVotingWindow(10080), 604800);
+  for (const minutes of [0, 4, 5.5, 10081, NaN, Infinity])
+    assert.throws(() => validateVotingWindow(minutes));
+});
+test("v2 ballot hints respect exact deadline and unknown browser time", () => {
+  assert.deepEqual(ballotWindow(300, 0), {
+    timed: true,
+    ended: false,
+    ready: false,
+  });
+  assert.equal(ballotWindow(300, 299).ended, false);
+  assert.equal(ballotWindow(300, 300).ended, true);
+  assert.equal(ballotWindow(300, 301).ended, true);
+  assert.deepEqual(ballotWindow(undefined, 0), {
+    timed: false,
+    ended: false,
+    ready: true,
+  });
+});
 test("finalized is not execution success", () => {
   assert.equal(executionSucceeded({ status: "FINALIZED" }), false);
   assert.equal(
